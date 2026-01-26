@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-mz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOP VENDAS | Premium Store</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0b0915;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #00c6ff;
+            --primary-glow: rgba(0, 198, 255, 0.4);
+            --accent: #7b2cbf;
+            --text: #ffffff;
+            --text-muted: #8b8b9b;
+            --danger: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; padding-bottom: 80px; }
+
+        /* Background Effects */
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.3; animation: float 10s infinite ease-in-out; }
+        .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -10%; left: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: var(--primary); bottom: 10%; right: -10%; animation-delay: -5s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } }
+
+        header {
+            padding: 15px 5%; background: rgba(11, 9, 21, 0.85); backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border);
+        }
+        .nav-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(45deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.3rem; }
+        .cart-badge { position: absolute; top: -5px; right: -8px; background: var(--danger); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 50px; border: 2px solid var(--bg); }
+
+        .search-container { position: relative; width: 100%; }
+        .search-container input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass); color: #fff; outline: none; }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 15px 5%; scrollbar-width: none; }
+        .cat-chip { padding: 8px 18px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50px; font-size: 0.8rem; white-space: nowrap; cursor: pointer; color: var(--text-muted); transition: 0.3s; }
+        .cat-chip.active { background: var(--primary); color: #000; font-weight: 700; box-shadow: 0 4px 15px var(--primary-glow); border-color: transparent; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px 5%; }
+        .card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; position: relative; }
+        .badge { position: absolute; top: 10px; left: 10px; background: var(--danger); color: #fff; font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; z-index: 5; }
+        .img-box { height: 180px; width: 100%; overflow: hidden; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .p-info { padding: 12px; }
+        .p-name { font-weight: 600; font-size: 0.9rem; height: 40px; overflow: hidden; }
+        .p-price { font-weight: 800; color: var(--primary); font-size: 1rem; margin-top: 5px; }
+        .add-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: #fff; font-weight: 600; cursor: pointer; font-size: 0.8rem; }
+
+        /* Modals */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: flex-end; z-index: 2000; }
+        .modal-content { background: #151321; width: 100%; max-width: 500px; border-radius: 25px 25px 0 0; padding: 25px; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .chip { padding: 10px 15px; border: 1px solid var(--glass-border); border-radius: 10px; font-size: 0.8rem; cursor: pointer; margin: 0 8px 8px 0; display: inline-block; }
+        .chip.active { border-color: var(--primary); background: rgba(0, 198, 255, 0.1); color: var(--primary); font-weight: bold; }
+
+        .input-field { width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; margin-top: 10px; outline: none; }
+        .confirm-btn { width: 100%; padding: 16px; background: var(--primary); color: #000; border: none; border-radius: 12px; font-weight: 800; margin-top: 20px; cursor: pointer; }
+
+        #toast { visibility: hidden; background: #fff; color: #000; padding: 16px 30px; border-radius: 50px; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 5000; font-weight: bold; }
+        #toast.show { visibility: visible; animation: fadeinout 3s; }
+        @keyframes fadeinout { 0%, 100% { opacity: 0; bottom: 0; } 10%, 90% { opacity: 1; bottom: 30px; } }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <header>
+        <div class="nav-top">
+            <span class="logo">Top Vendas</span>
+            <div class="cart-icon" onclick="openCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-badge" id="cartCount">0</span>
+            </div>
+        </div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="O que você procura?" oninput="handleSearch(this.value)">
+        </div>
+    </header>
+
+    <div class="categories" id="catList">
+        <div class="cat-chip active" onclick="filterBy('todos', this)">Todos</div>
+        <div class="cat-chip" onclick="filterBy('camisa', this)">Camisas</div>
+        <div class="cat-chip" onclick="filterBy('calca', this)">Calças</div>
+        <div class="cat-chip" onclick="filterBy('sapato', this)">Sapatos</div>
+        <div class="cat-chip" onclick="filterBy('perfume', this)">Perfumes</div>
+    </div>
+
+    <div class="grid" id="mainGrid">
+        </div>
+
+    <div class="modal" id="selectionModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 id="mTitle">Opções</h3>
+                <i class="fa fa-times" onclick="closeModal('selectionModal')"></i>
+            </div>
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
+                <img id="mImg" style="width:100px; height:100px; border-radius:15px; object-fit:cover;">
+                <div>
+                    <h4 id="mName"></h4>
+                    <p id="mPrice" style="color:var(--primary); font-weight:800; font-size:1.2rem;"></p>
+                </div>
+            </div>
+            <p id="label1" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:8px;">TAMANHO / VOLUME:</p>
+            <div id="mSizes"></div>
+            <p id="label2" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:8px; margin-top:15px;">COR / VARIAÇÃO:</p>
+            <div id="mColors"></div>
+            <button class="confirm-btn" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
+        </div>
+    </div>
+
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <h3>Seu Carrinho</h3>
+            <div id="cartItems" style="margin: 20px 0; max-height: 250px; overflow-y: auto;"></div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; padding:15px 0; border-top:1px solid var(--glass-border);">
+                <span>TOTAL</span>
+                <span id="totalDisplay">0 MT</span>
+            </div>
+            <input type="text" id="cName" class="input-field" placeholder="Seu Nome">
+            <input type="text" id="cLocale" class="input-field" placeholder="Bairro para entrega">
+            <button class="confirm-btn" style="background:#25D366; color:#fff;" onclick="checkout()">PEDIR NO WHATSAPP</button>
+            <button class="add-btn" onclick="closeModal('cartModal')">Continuar Comprando</button>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPKEeQwU3vsNqWyLjgb7czsk_8-wzPfPo",
+            authDomain: "criador-6da7a.firebaseapp.com",
+            databaseURL: "https://criador-6da7a-default-rtdb.firebaseio.com",
+            projectId: "criador-6da7a",
+            storageBucket: "criador-6da7a.firebasestorage.app",
+            messagingSenderId: "227610191967",
+            appId: "1:227610191967:web:40b9727ce93b655bbad3ea",
+            measurementId: "G-YR21X469EH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let allProducts = [];
+        let cart = [];
+        let waNumber = "258840000000"; 
+        let currentSelected = { p: null, s: null, c: null };
+
+        // 1. Monitorar Dados
+        function init() {
+            // Pegar WhatsApp
+            onSnapshot(doc(db, "settings", "store"), (d) => {
+                if(d.exists()) waNumber = d.data().whatsapp;
+            });
+
+            // Pegar Produtos
+            onSnapshot(collection(db, "products"), (snap) => {
+                allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                render(allProducts);
+            });
+        }
+
+        function render(items) {
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = items.map(p => `
+                <div class="card">
+                    ${p.promo ? '<span class="badge">PROMO</span>' : ''}
+                    <div class="img-box" onclick="showDetails('${p.id}')"><img src="${p.img}"></div>
+                    <div class="p-info">
+                        <div class="p-name">${p.name}</div>
+                        <div class="p-price">${Number(p.price).toLocaleString()} MT</div>
+                        <button class="add-btn" onclick="showDetails('${p.id}')">COMPRAR</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 2. Lógica de Detalhes
+        window.showDetails = (id) => {
+            const p = allProducts.find(x => x.id === id);
+            currentSelected = { p: p, s: null, c: null };
+            
+            document.getElementById('mTitle').innerText = p.cat === 'perfume' ? 'Detalhes da Fragrância' : 'Opções do Produto';
+            document.getElementById('mName').innerText = p.name;
+            document.getElementById('mPrice').innerText = Number(p.price).toLocaleString() + " MT";
+            document.getElementById('mImg').src = p.img;
+
+            // Gerar Chips de Tamanho
+            document.getElementById('mSizes').innerHTML = p.sizes.map(s => `
+                <div class="chip" onclick="selectChip(this, 's', '${s}')">${s}</div>
+            `).join('');
+
+            // Gerar Chips de Cores (se houver)
+            const colors = p.colors ? (Array.isArray(p.colors) ? p.colors : p.colors.split(',')) : ['Padrão'];
+            document.getElementById('mColors').innerHTML = colors.map(c => `
+                <div class="chip" onclick="selectChip(this, 'c', '${c}')">${c}</div>
+            `).join('');
+
+            document.getElementById('selectionModal').style.display = 'flex';
+        };
+
+        window.selectChip = (el, type, val) => {
+            el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            currentSelected[type] = val;
+        };
+
+        // 3. Carrinho
+        window.addToCart = () => {
+            if(!currentSelected.s || !currentSelected.c) return toast("Selecione as opções!");
+            cart.push({ ...currentSelected.p, selSize: currentSelected.s, selColor: currentSelected.c });
+            document.getElementById('cartCount').innerText = cart.length;
+            closeModal('selectionModal');
+            toast("Adicionado ao carrinho!");
+        };
+
+        window.openCart = () => {
+            const list = document.getElementById('cartItems');
+            list.innerHTML = cart.map((item, idx) => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; background:var(--glass); padding:10px; border-radius:10px;">
+                    <div style="font-size:0.8rem;">
+                        <b>${item.name}</b><br>${item.selSize} | ${item.selColor}
+                    </div>
+                    <div style="font-weight:800; color:var(--primary);">${Number(item.price).toLocaleString()} MT</div>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((s, i) => s + Number(i.price), 0);
+            document.getElementById('totalDisplay').innerText = total.toLocaleString() + " MT";
+            document.getElementById('cartModal').style.display = 'flex';
+        };
+
+        window.checkout = () => {
+            const name = document.getElementById('cName').value;
+            const loc = document.getElementById('cLocale').value;
+            if(!name || cart.length === 0) return toast("Preencha seu nome!");
+
+            let msg = `*NOVO PEDIDO - TOP VENDAS*%0A%0A`;
+            msg += `*Cliente:* ${name}%0A*Entrega:* ${loc}%0A%0A`;
+            cart.forEach(i => msg += `• ${i.name} (${i.selSize}/${i.selColor})%0A`);
+            
+            const total = cart.reduce((s, i) => s + Number(i.price), 0);
+            msg += `%0A*TOTAL: ${total.toLocaleString()} MT*%0A%0A_Pagamento via M-Pesa ou E-mola_`;
+            
+            window.open(`https://wa.me/${waNumber}?text=${msg}`);
+        };
+
+        // 4. Utilitários
+        window.filterBy = (cat, btn) => {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            render(cat === 'todos' ? allProducts : allProducts.filter(p => p.cat === cat));
+        };
+
+        window.handleSearch = (query) => {
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            render(filtered);
+        };
+
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        
+        function toast(m) {
+            const t = document.getElementById('toast');
+            t.innerText = m; t.className = 'show';
+            setTimeout(() => t.className = '', 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
