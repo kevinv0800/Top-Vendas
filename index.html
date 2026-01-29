@@ -24,9 +24,40 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* A classe hidden usa !important para garantir que esconda, 
+           então no JS usaremos remove('hidden') para mostrar */
         .hidden { display: none !important; }
 
-        /* --- UI Elements --- */
+        /* --- TELA DE LOGIN / LOADING (UNIVERSAL) --- */
+        #loginView { 
+            position: fixed; inset: 0; z-index: 3000; background: var(--bg-dark); 
+            display: flex; flex-direction: column; justify-content: center; padding: 30px; 
+            transition: opacity 0.5s ease;
+        }
+
+        /* Animações da Logo/Texto */
+        .dynamic-logo { max-width: 150px; max-height: 150px; object-fit: contain; margin-bottom: 20px; animation: pulseLogo 2s infinite ease-in-out; display: block; margin-left: auto; margin-right: auto; }
+        .logo-text-anim { 
+            font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--primary), #fff); background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite; 
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .login-card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
+        .nice-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .nice-input:focus { border-color: var(--primary); }
+        
+        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; box-shadow: 0 0 15px var(--primary-glow); }
+        
+        .pass-group { position: relative; margin-bottom: 15px; }
+        .pass-group input { margin-bottom: 0; padding-right: 45px; }
+        .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; padding: 5px; }
+
+        /* --- APP UI --- */
         #toast { 
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); 
             background: #222; color: #fff; padding: 12px 24px; border-radius: 50px; 
@@ -34,15 +65,6 @@
             border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         #toast.visible { transform: translateX(-50%) translateY(0); }
-
-        .badge-new {
-            position: absolute; top: 10px; left: 10px; z-index: 10;
-            background: var(--primary); color: #000; 
-            font-size: 0.65rem; font-weight: 800; padding: 4px 8px; 
-            border-radius: 6px; box-shadow: 0 0 10px var(--primary-glow);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
         header {
             position: sticky; top: 0; z-index: 100; padding: 15px 20px;
@@ -64,6 +86,7 @@
         .hero-section { padding: 0 20px 20px; }
         .main-swiper { border-radius: var(--radius); height: 180px; border: 1px solid var(--border); }
         .main-swiper img, .main-swiper video { width: 100%; height: 100%; object-fit: cover; }
+        .swiper-slide[onclick] { cursor: pointer; }
 
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
         .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.2s; }
@@ -74,6 +97,13 @@
         .p-title { font-size: 0.9rem; font-weight: 600; height: 40px; overflow: hidden; line-height: 1.3; }
         .p-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
         .p-price { font-size: 1rem; font-weight: 800; color: #fff; }
+
+        .badge-new { position: absolute; top: 10px; left: 10px; z-index: 10; background: var(--primary); color: #000; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; box-shadow: 0 0 10px var(--primary-glow); animation: pulse 2s infinite; }
+        
+        /* Animações Love */
+        @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.3); } 28% { transform: scale(1); } 42% { transform: scale(1.3); } 70% { transform: scale(1); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+        @keyframes floatFlower { 0% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(10deg); } 100% { transform: translateY(0) rotate(0); } }
 
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .nav-btn { font-size: 1.4rem; color: #666; position: relative; transition: 0.3s; cursor: pointer; }
@@ -89,16 +119,6 @@
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; background: #000; }
         .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; cursor: pointer; }
         .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
-
-        #loginView { position: fixed; inset: 0; z-index: 3000; background: var(--bg-dark); display: flex; flex-direction: column; justify-content: center; padding: 30px; }
-        .login-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .nice-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        .nice-input:focus { border-color: var(--primary); }
-        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; }
-        
-        .pass-group { position: relative; margin-bottom: 15px; }
-        .pass-group input { margin-bottom: 0; padding-right: 45px; }
-        .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; padding: 5px; }
 
         .profile-header { text-align: center; margin-bottom: 30px; }
         .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #222; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; }
@@ -119,33 +139,38 @@
 
     <div id="toast"><i class="fa fa-info-circle"></i> <span>Aviso</span></div>
 
-    <div id="loginView" class="hidden">
+    <div id="loginView">
         <div style="text-align: center; margin-bottom: 30px;">
-            <div style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--primary-glow);">
-                <i class="fa-solid fa-rocket" style="font-size: 2rem; color: var(--primary);"></i>
-            </div>
-            <h2>Bem-vindo</h2>
-            <p style="color: #888;">Faça login para acessar</p>
+            <img id="loginLogoImg" class="dynamic-logo hidden">
+            <div id="loginLogoText" class="logo-text-anim hidden">TOP VENDAS</div>
+            
+            <h2 id="loginTitle" style="margin-top:20px;">Bem-vindo</h2>
+            <p id="loginSub" style="color: #888;">Faça login para acessar</p>
         </div>
         
-        <div class="login-card">
-            <input type="text" id="regName" class="nice-input" placeholder="Nome Completo">
-            <input type="tel" id="regPhone" class="nice-input" placeholder="WhatsApp (Ex: 841234567)">
-            <input type="email" id="regEmail" class="nice-input" placeholder="Seu E-mail">
+        <div class="login-card" id="authBox">
+            <input type="text" id="regName" class="nice-input hidden" placeholder="Nome Completo">
+            <input type="tel" id="regPhone" class="nice-input hidden" placeholder="Número de Celular">
             
+            <input type="email" id="regEmail" class="nice-input" placeholder="Email">
             <div class="pass-group">
-                <input type="password" id="regPass" class="nice-input" placeholder="Senha (Mín. 6 dígitos)">
-                <i class="fa fa-eye pass-toggle" onclick="togglePassView(this)"></i>
+                <input type="password" id="regPass" class="nice-input" placeholder="Senha">
+                <i class="fa fa-eye pass-toggle" onclick="togglePassView()"></i>
             </div>
             
-            <button class="action-btn" onclick="handleAuth()">ENTRAR / CADASTRAR</button>
+            <button id="authBtn" class="action-btn" onclick="handleAuth()">ENTRAR</button>
             <p id="toggleAuthMode" style="text-align:center; margin-top:15px; font-size:0.8rem; color:#888; cursor:pointer;">
-                Já tem conta? <span style="color:var(--primary)">Clique aqui para Entrar</span>
+                Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>
             </p>
+        </div>
+        
+        <div id="loadingBox" style="text-align:center; display:none; margin-top:20px;">
+            <i class="fa fa-spinner fa-spin" style="font-size:2rem; color:var(--primary)"></i>
+            <p style="color:#666; margin-top:10px;">Carregando loja...</p>
         </div>
     </div>
 
-    <div id="shopApp">
+    <div id="shopApp" class="hidden">
         <header>
             <div style="display:flex; align-items:center;">
                 <img id="headerLogo" class="logo-img" src="" alt="Logo">
@@ -184,7 +209,7 @@
 
             <div style="background:#1a1a1a; border-radius:12px; border:1px solid var(--border);">
                 <div class="info-btn" onclick="downloadApp()">
-                    <span><i class="fa fa-cloud-arrow-down"></i> Baixar Rápido</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                    <span><i class="fa fa-cloud-arrow-down"></i> Baixar App</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
                 </div>
                 
                 <div class="info-btn" onclick="openTextModal('Sobre Nós', window.storeAbout)">
@@ -202,7 +227,7 @@
                 <i class="fa-brands fa-instagram" style="font-size: 2rem;"></i>
                 <div>
                     <div style="font-weight: bold;">Siga-nos</div>
-                    <div style="font-size: 0.8rem; opacity:0.8;">Fique por dentro das novidades</div>
+                    <div style="font-size: 0.8rem; opacity:0.8;">Acompanhe as novidades</div>
                 </div>
             </div>
 
@@ -277,13 +302,19 @@
         window.storeAbout = "Sem informações.";
         window.storeDelivery = "Sem informações.";
         window.socialLink = "";
-        window.appDownloadLink = ""; // Link do App
+        window.appDownloadLink = ""; 
 
-        // --- AUTH ---
+        // --- AUTH & LOADING ---
         onAuthStateChanged(auth, async (user) => {
+            const loginView = document.getElementById('loginView');
+            const shopApp = document.getElementById('shopApp');
+            const authBox = document.getElementById('authBox');
+            const loadingBox = document.getElementById('loadingBox');
+            
             if (user) {
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('shopApp').classList.remove('hidden');
+                authBox.style.display = 'none';
+                loadingBox.style.display = 'block';
+                
                 const snap = await getDoc(doc(db, "users", user.uid));
                 if (snap.exists()) {
                     const d = snap.data();
@@ -291,70 +322,129 @@
                     document.getElementById('uEmailDisplay').innerText = user.email;
                     document.getElementById('uAvatar').innerText = (d.name?.[0] || "U").toUpperCase();
                 }
+
+                setTimeout(() => {
+                    loginView.classList.add('hidden');
+                    shopApp.classList.remove('hidden');
+                }, 800);
             } else {
-                document.getElementById('shopApp').classList.add('hidden');
-                document.getElementById('loginView').classList.remove('hidden');
+                shopApp.classList.add('hidden');
+                loginView.classList.remove('hidden');
+                loadingBox.style.display = 'none';
+                authBox.style.display = 'block';
             }
         });
 
+        // LÓGICA DE CADASTRO CORRIGIDA
         window.handleAuth = async () => {
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
-            const name = document.getElementById('regName').value;
-            const phone = document.getElementById('regPhone').value;
-            if(pass.length < 6) return showToast("Senha curta!");
+            
+            if(!email) return showToast("Digite seu e-mail");
+            if(pass.length < 6) return showToast("Senha curta (min 6)");
+            
             try {
-                if (isLoginMode) { await signInWithEmailAndPassword(auth, email, pass); }
-                else {
+                if (isLoginMode) {
+                    // MODO LOGIN
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    // MODO CADASTRO - Validar campos extras
+                    const name = document.getElementById('regName').value;
+                    const phone = document.getElementById('regPhone').value;
+                    
+                    if(!name || !phone) {
+                        return showToast("Preencha Nome e Celular!");
+                    }
+
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, "users", cred.user.uid), { name, phone, email, role: 'cliente', date: Date.now() });
+                    await setDoc(doc(db, "users", cred.user.uid), { 
+                        name: name, 
+                        phone: phone, 
+                        email: email, 
+                        role: 'cliente', 
+                        date: Date.now() 
+                    });
                 }
-            } catch (e) { showToast("Erro de Autenticação"); }
+            } catch (e) { 
+                console.error(e);
+                let msg = "Erro ao processar";
+                if(e.code === 'auth/email-already-in-use') msg = "E-mail já cadastrado";
+                if(e.code === 'auth/wrong-password') msg = "Senha incorreta";
+                if(e.code === 'auth/user-not-found') msg = "Usuário não encontrado";
+                showToast(msg); 
+            }
         };
 
+        // LÓGICA DE ALTERNAR LOGIN/CADASTRO CORRIGIDA
         document.getElementById('toggleAuthMode').onclick = () => {
             isLoginMode = !isLoginMode;
-            document.getElementById('regName').style.display = isLoginMode ? 'none' : 'block';
-            document.getElementById('regPhone').style.display = isLoginMode ? 'none' : 'block';
-            document.getElementById('toggleAuthMode').innerHTML = isLoginMode ? 'Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>' : 'Já tem conta? <span style="color:var(--primary)">Entrar</span>';
+            
+            const nameInput = document.getElementById('regName');
+            const phoneInput = document.getElementById('regPhone');
+            const btn = document.getElementById('authBtn');
+            const toggleTxt = document.getElementById('toggleAuthMode');
+
+            if (isLoginMode) {
+                // VOLTAR PARA LOGIN
+                nameInput.classList.add('hidden');
+                phoneInput.classList.add('hidden');
+                btn.innerText = 'ENTRAR';
+                toggleTxt.innerHTML = 'Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>';
+            } else {
+                // IR PARA CADASTRO (Mostrar campos)
+                nameInput.classList.remove('hidden');
+                phoneInput.classList.remove('hidden');
+                btn.innerText = 'CADASTRAR';
+                toggleTxt.innerHTML = 'Já tem conta? <span style="color:var(--primary)">Entrar</span>';
+            }
         };
 
-        // --- DADOS DINÂMICOS ---
+        // --- CONFIGURAÇÕES DA LOJA ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
                 if(d.whatsapp) waNumber = d.whatsapp;
-                if(d.appLink) window.appDownloadLink = d.appLink; // Captura o link do painel
+                window.appDownloadLink = d.appLink || "";
+                window.socialLink = d.social || "";
                 if(d.aboutText) window.storeAbout = d.aboutText;
                 if(d.deliveryText) window.storeDelivery = d.deliveryText;
-                if(d.logo) { document.getElementById('headerLogo').src = d.logo; document.getElementById('headerLogo').style.display = 'block'; document.getElementById('headerText').style.display='none'; }
-                if(d.social) { window.socialLink = d.social; document.getElementById('socialBtn').classList.remove('hidden'); }
+                
+                const logoImgs = [document.getElementById('headerLogo'), document.getElementById('loginLogoImg')];
+                const logoTxts = [document.getElementById('headerText'), document.getElementById('loginLogoText')];
+                
+                if(d.logo) {
+                    logoImgs.forEach(img => { img.src = d.logo; img.classList.remove('hidden'); });
+                    logoTxts.forEach(txt => txt.classList.add('hidden'));
+                    document.getElementById('headerLogo').style.display = 'block';
+                } else {
+                    logoImgs.forEach(img => img.classList.add('hidden'));
+                    logoTxts.forEach(txt => txt.classList.remove('hidden'));
+                }
+                if(d.social) { document.getElementById('socialBtn').classList.remove('hidden'); }
             }
         });
 
-        // Função do Botão de Download
-        window.downloadApp = () => {
-            if(window.appDownloadLink) {
-                window.open(window.appDownloadLink, '_blank');
-            } else {
-                showToast("O download oficial estará disponível em breve!");
-            }
-        };
+        window.downloadApp = () => { window.appDownloadLink && window.appDownloadLink.length > 5 ? window.open(window.appDownloadLink, '_blank') : showToast("Link indisponível no momento."); };
+        window.openSocial = () => { window.socialLink && window.socialLink.length > 5 ? window.open(window.socialLink, '_blank') : showToast("Rede social não configurada."); };
 
-        // Banners
+        // --- PRODUTOS & CORE ---
         onSnapshot(collection(db, "banners"), (snap) => {
-            document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => `<div class="swiper-slide"><img src="${d.data().url}"></div>`).join('');
+            document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => {
+                const b = d.data();
+                const clickAction = b.targetLink ? `onclick="window.open('${b.targetLink}', '_blank')"` : '';
+                return `<div class="swiper-slide" ${clickAction}>
+                    ${b.type === 'video' ? `<video src="${b.url}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${b.url}">`}
+                </div>`;
+            }).join('');
             new Swiper('.main-swiper', { loop: true, autoplay: true, pagination: { el: '.swiper-pagination' } });
         });
 
-        // Categorias
         onSnapshot(collection(db, "categories"), (snap) => {
             let h = `<div class="cat-chip active" onclick="setCategory('todos', this)">Todos</div>`;
             snap.docs.forEach(d => h += `<div class="cat-chip" onclick="setCategory('${d.data().id}', this)">${d.data().name}</div>`);
             document.getElementById('catListDisplay').innerHTML = h;
         });
 
-        // Produtos
         onSnapshot(collection(db, "products"), (snap) => {
             products = snap.docs.map(d => ({id: d.id, ...d.data()}));
             renderProducts(products);
@@ -364,10 +454,38 @@
             const oneDay = 24 * 60 * 60 * 1000;
             document.getElementById('productGrid').innerHTML = list.map(p => {
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
-                return `<div class="card" onclick="openProduct('${p.id}')">
+                
+                // LÓGICA LOVE: Verifica se "Love" está no nome ou categoria
+                const nameLower = p.name.toLowerCase();
+                const isLove = nameLower.includes('love') || (p.cat && p.cat.toLowerCase().includes('love'));
+                
+                // Estilos e Animações Condicionais
+                let cardStyle = "";
+                let animDecors = "";
+                
+                if(isLove) {
+                    cardStyle = "background: linear-gradient(135deg, #e91e63, #ff4d6d); border: 1px solid #ff8fa3;";
+                    animDecors = `
+                        <div style="position:absolute; top:10px; right:10px; z-index:12; color:#fff; animation:heartBeat 1.5s infinite;">
+                            <i class="fa-solid fa-heart" style="font-size:1.2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3));"></i>
+                        </div>
+                        <div style="position:absolute; bottom:55px; right:10px; z-index:12; color:#fff; animation:floatFlower 3s infinite ease-in-out;">
+                            <i class="fa-solid fa-spa" style="font-size:1.4rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3));"></i>
+                        </div>
+                    `;
+                }
+
+                return `<div class="card" onclick="openProduct('${p.id}')" style="${cardStyle}">
                     ${isNew ? '<div class="badge-new">NOVO</div>' : ''}
+                    ${animDecors}
                     <div class="img-box"><img src="${p.img}"></div>
-                    <div class="p-details"><div class="p-title">${p.name}</div><div class="p-footer"><div class="p-price">${Number(p.price).toLocaleString()} MT</div> <i class="fa fa-plus-circle" style="color:var(--primary)"></i></div></div>
+                    <div class="p-details">
+                        <div class="p-title">${p.name}</div>
+                        <div class="p-footer">
+                            <div class="p-price">${Number(p.price).toLocaleString()} MT</div> 
+                            <i class="fa fa-plus-circle" style="color:${isLove ? '#fff' : 'var(--primary)'}"></i>
+                        </div>
+                    </div>
                 </div>`;
             }).join('');
         };
@@ -380,7 +498,6 @@
 
         window.filterProducts = (v) => renderProducts(products.filter(p => p.name.toLowerCase().includes(v.toLowerCase())));
 
-        // --- MODAIS E CARRINHO ---
         window.openProduct = (id) => {
             currentProd = products.find(p => p.id === id);
             selections = { size: '', color: '' };
@@ -421,13 +538,12 @@
             const snap = await getDoc(doc(db, "users", u.uid));
             const ud = snap.data();
             const total = cart.reduce((a, b) => a + Number(b.price), 0);
-            await addDoc(collection(db, "orders"), { uid: u.uid, userName: ud.name, items: cart, total, date: Date.now() });
+            await addDoc(collection(db, "orders"), { uid: u.uid, userName: ud.name, items: cart, total, status: 'pending', date: Date.now() });
             let msg = `*NOVO PEDIDO*%0A👤 ${ud.name}%0A📍 ${addr}%0A*TOTAL: ${total.toLocaleString()} MT*`;
             window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
             cart = []; document.getElementById('cartCount').innerText = 0; closeModal('cartModal');
         };
 
-        // Auxiliares
         window.switchView = (v, btn) => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -436,9 +552,8 @@
         };
         window.closeModal = (id) => document.getElementById(id).classList.remove('open');
         window.openTextModal = (title, content) => { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = content; document.getElementById('infoModal').classList.add('open'); };
-        window.openSocial = () => { if(window.socialLink) window.open(window.socialLink, '_blank'); };
         window.showToast = (msg) => { const t = document.getElementById('toast'); t.querySelector('span').innerText = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 3000); };
-        window.togglePassView = (icon) => { const input = document.getElementById('regPass'); input.type = input.type === 'password' ? 'text' : 'password'; };
+        window.togglePassView = () => { const input = document.getElementById('regPass'); input.type = input.type === 'password' ? 'text' : 'password'; };
         window.resetPass = () => { if(auth.currentUser) sendPasswordResetEmail(auth, auth.currentUser.email).then(() => showToast("E-mail de redefinição enviado!")); };
     </script>
 </body>
