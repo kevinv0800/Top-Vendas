@@ -26,7 +26,24 @@
         body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 90px; overflow-x: hidden; }
         .hidden { display: none !important; }
 
-        /* --- Header --- */
+        /* --- UI Elements --- */
+        #toast { 
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); 
+            background: #222; color: #fff; padding: 12px 24px; border-radius: 50px; 
+            z-index: 5000; transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+            border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #toast.visible { transform: translateX(-50%) translateY(0); }
+
+        .badge-new {
+            position: absolute; top: 10px; left: 10px; z-index: 10;
+            background: var(--primary); color: #000; 
+            font-size: 0.65rem; font-weight: 800; padding: 4px 8px; 
+            border-radius: 6px; box-shadow: 0 0 10px var(--primary-glow);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+
         header {
             position: sticky; top: 0; z-index: 100; padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -36,7 +53,6 @@
         .logo-img { height: 40px; display: none; }
         .logo-text { font-size: 1.2rem; font-weight: 800; background: linear-gradient(45deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- Search & Cats --- */
         .search-bar { padding: 15px 20px; position: relative; }
         .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); padding: 12px 15px 12px 45px; border-radius: 12px; color: #fff; outline: none; }
         .search-icon { position: absolute; left: 35px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
@@ -45,66 +61,58 @@
         .cat-chip { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 18px; border-radius: 50px; white-space: nowrap; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
         .cat-chip.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-        /* --- Banners --- */
         .hero-section { padding: 0 20px 20px; }
         .main-swiper { border-radius: var(--radius); height: 180px; border: 1px solid var(--border); }
         .main-swiper img, .main-swiper video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- SLIDE TARDE (3 ITENS PEQUENOS) --- */
-        .tarde-section { padding: 0 20px 20px; }
-        .tarde-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--primary); font-weight: 800; font-size: 0.9rem; }
-        .tarde-swiper { height: 160px; overflow: visible; }
-        .tarde-card { background: var(--bg-card); border-radius: 10px; height: 100%; border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
-        .tarde-img { width: 100%; height: 90px; object-fit: cover; }
-        .tarde-info { padding: 8px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .tarde-title { font-size: 0.7rem; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .tarde-price { font-size: 0.8rem; font-weight: 800; color: #fff; margin-top: 5px; }
-
-        /* --- Grid Normal --- */
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
-        .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; }
-        .img-box { height: 160px; }
+        .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.2s; }
+        .card:active { transform: scale(0.98); }
+        .img-box { height: 160px; position: relative; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .p-details { padding: 12px; }
         .p-title { font-size: 0.9rem; font-weight: 600; height: 40px; overflow: hidden; line-height: 1.3; }
         .p-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
         .p-price { font-size: 1rem; font-weight: 800; color: #fff; }
 
-        /* --- Navigation --- */
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nav-btn { font-size: 1.4rem; color: #666; position: relative; transition: 0.3s; }
+        .nav-btn { font-size: 1.4rem; color: #666; position: relative; transition: 0.3s; cursor: pointer; }
         .nav-btn.active { color: var(--primary); transform: translateY(-3px); }
         .badge { position: absolute; top: -5px; right: -8px; background: var(--valentine-red); color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
 
-        /* --- Modals --- */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; display: flex; align-items: flex-end; }
         .modal.open { opacity: 1; pointer-events: all; }
-        .sheet { width: 100%; background: #1a1a1a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s; max-height: 95vh; overflow-y: auto; border-top: 1px solid var(--border); }
+        .sheet { width: 100%; background: #1a1a1a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s; max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
         .modal.open .sheet { transform: translateY(0); }
         
-        /* Slide Detalhes */
         .detail-swiper { width: 100%; height: 300px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; background: #000; }
+        .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; cursor: pointer; }
+        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
 
-        /* --- Auth View --- */
         #loginView { position: fixed; inset: 0; z-index: 3000; background: var(--bg-dark); display: flex; flex-direction: column; justify-content: center; padding: 30px; }
         .login-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .nice-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; }
+        .nice-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .nice-input:focus { border-color: var(--primary); }
         .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; }
         
-        /* --- Profile Styles --- */
+        .pass-group { position: relative; margin-bottom: 15px; }
+        .pass-group input { margin-bottom: 0; padding-right: 45px; }
+        .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; padding: 5px; }
+
         .profile-header { text-align: center; margin-bottom: 30px; }
         .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #222; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; }
-        .edit-group { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .edit-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; display: block; }
-        .app-download { background: linear-gradient(45deg, #111, #222); padding: 20px; border-radius: 12px; border: 1px solid var(--primary); display: flex; align-items: center; gap: 15px; margin-top: 20px; cursor: pointer; }
+        
+        .info-btn { 
+            background: var(--bg-card); width: 100%; padding: 15px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); cursor: pointer; color: #ddd;
+        }
+        .info-btn:first-child { border-top-left-radius: 12px; border-top-right-radius: 12px; }
+        .info-btn:last-child { border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; border-bottom: none; }
+        .info-btn i { color: var(--primary); width: 25px; }
 
-        /* Toast */
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #222; color: #fff; padding: 12px 24px; border-radius: 50px; z-index: 5000; transition: 0.4s; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-        #toast.visible { transform: translateX(-50%) translateY(0); }
-
-        .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; }
-        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
+        .social-box { background: linear-gradient(45deg, #405DE6, #833AB4); margin-top: 20px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -114,17 +122,21 @@
     <div id="loginView" class="hidden">
         <div style="text-align: center; margin-bottom: 30px;">
             <div style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; border: 2px solid var(--primary); box-shadow: 0 0 20px var(--primary-glow);">
-                <i class="fa-solid fa-bag-shopping" style="font-size: 2rem; color: var(--primary);"></i>
+                <i class="fa-solid fa-rocket" style="font-size: 2rem; color: var(--primary);"></i>
             </div>
             <h2>Bem-vindo</h2>
-            <p style="color: #888;">Faça login para comprar</p>
+            <p style="color: #888;">Faça login para acessar</p>
         </div>
         
         <div class="login-card">
-            <input type="text" id="regName" class="nice-input" placeholder="Nome Completo (Para cadastro)">
+            <input type="text" id="regName" class="nice-input" placeholder="Nome Completo">
             <input type="tel" id="regPhone" class="nice-input" placeholder="WhatsApp (Ex: 841234567)">
             <input type="email" id="regEmail" class="nice-input" placeholder="Seu E-mail">
-            <input type="password" id="regPass" class="nice-input" placeholder="Sua Senha">
+            
+            <div class="pass-group">
+                <input type="password" id="regPass" class="nice-input" placeholder="Senha (Mín. 6 dígitos)">
+                <i class="fa fa-eye pass-toggle" onclick="togglePassView(this)"></i>
+            </div>
             
             <button class="action-btn" onclick="handleAuth()">ENTRAR / CADASTRAR</button>
             <p id="toggleAuthMode" style="text-align:center; margin-top:15px; font-size:0.8rem; color:#888; cursor:pointer;">
@@ -157,13 +169,6 @@
 
             <div class="categories" id="catListDisplay">
                 <div class="cat-chip active">Todos</div>
-                </div>
-
-            <div id="tardeSection" class="tarde-section hidden">
-                <div class="tarde-header"><i class="fa-solid fa-clock"></i> ESPECIAIS DA TARDE</div>
-                <div class="swiper tarde-swiper">
-                    <div class="swiper-wrapper" id="tardeWrapper"></div>
-                </div>
             </div>
 
             <div class="grid" id="productGrid"></div>
@@ -174,34 +179,34 @@
             <div class="profile-header">
                 <div class="p-avatar" id="uAvatar">U</div>
                 <h2 id="uNameDisplay">Usuário</h2>
-                <p id="uEmailDisplay" style="color: var(--text-muted); font-size: 0.9rem;">email@exemplo.com</p>
+                <p id="uEmailDisplay" style="color: var(--text-muted); font-size: 0.9rem;">...</p>
             </div>
 
-            <div class="edit-group">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">Editar Dados</h3>
-                <span class="edit-label">Seu Nome</span>
-                <input type="text" id="editName" class="nice-input" style="background: #111;">
-                <span class="edit-label">Seu WhatsApp</span>
-                <input type="tel" id="editPhone" class="nice-input" style="background: #111;">
-                <button class="action-btn" onclick="updateProfile()" style="margin-top:0;">Salvar Alterações</button>
-            </div>
-
-            <div class="edit-group">
-                <h3 style="margin-bottom: 15px; color: var(--valentine-red);">Segurança</h3>
-                <span class="edit-label">Email (Não editável)</span>
-                <input type="text" id="editEmail" class="nice-input" disabled style="opacity: 0.5;">
-                <button class="action-btn" onclick="resetPass()" style="background: #333; color: #fff;">Redefinir Senha</button>
-            </div>
-
-            <div class="app-download" onclick="alert('Link do App em breve!')">
-                <i class="fa-brands fa-android" style="font-size: 2rem; color: #a4c639;"></i>
-                <div>
-                    <div style="font-weight: bold;">Baixar nosso App</div>
-                    <div style="font-size: 0.8rem; color: #888;">Melhor experiência garantida</div>
+            <div style="background:#1a1a1a; border-radius:12px; border:1px solid var(--border);">
+                <div class="info-btn" onclick="downloadApp()">
+                    <span><i class="fa fa-cloud-arrow-down"></i> Baixar Rápido</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                </div>
+                
+                <div class="info-btn" onclick="openTextModal('Sobre Nós', window.storeAbout)">
+                    <span><i class="fa fa-store"></i> Sobre a Loja</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                </div>
+                <div class="info-btn" onclick="openTextModal('Entregas', window.storeDelivery)">
+                    <span><i class="fa fa-truck"></i> Informações de Entrega</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                </div>
+                <div class="info-btn" onclick="resetPass()">
+                    <span><i class="fa fa-lock"></i> Redefinir Senha</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
                 </div>
             </div>
 
-            <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 20px;">Sair da Conta</button>
+            <div id="socialBtn" class="social-box hidden" onclick="openSocial()">
+                <i class="fa-brands fa-instagram" style="font-size: 2rem;"></i>
+                <div>
+                    <div style="font-weight: bold;">Siga-nos</div>
+                    <div style="font-size: 0.8rem; opacity:0.8;">Fique por dentro das novidades</div>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 30px;">Sair da Conta</button>
             <div style="height: 100px;"></div>
         </div>
 
@@ -216,57 +221,41 @@
         <div class="sheet">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                 <h2 id="mName" style="font-size: 1.2rem;">Produto</h2>
-                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem;"></i>
+                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:10px;"></i>
             </div>
-            
             <div class="swiper detail-swiper">
                 <div class="swiper-wrapper" id="detailWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
-
             <h1 id="mPrice" style="color: var(--primary); margin-bottom: 20px;">0 MT</h1>
-
-            <div style="margin-bottom: 15px;">
-                <p style="color:#888; font-size:0.8rem; margin-bottom:5px;">TAMANHO</p>
-                <div id="mSizes"></div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <p style="color:#888; font-size:0.8rem; margin-bottom:5px;">COR / VARIAÇÃO</p>
-                <div id="mColors"></div>
-            </div>
-
+            <div style="margin-bottom: 15px;"><p style="color:#888; font-size:0.8rem; margin-bottom:5px;">TAMANHO</p><div id="mSizes"></div></div>
+            <div style="margin-bottom: 20px;"><p style="color:#888; font-size:0.8rem; margin-bottom:5px;">COR / VARIAÇÃO</p><div id="mColors"></div></div>
             <button class="action-btn" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
         </div>
     </div>
 
     <div class="modal" id="cartModal">
         <div class="sheet">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                <h2>Seu Carrinho</h2>
-                <i class="fa fa-times" onclick="closeModal('cartModal')"></i>
-            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2>Seu Carrinho</h2><i class="fa fa-times" onclick="closeModal('cartModal')" style="font-size:1.5rem; padding:10px;"></i></div>
             <div id="cartList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;"></div>
-            
-            <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; display:flex; justify-content:space-between;">
-                <b>TOTAL</b> <b id="cartTotal" style="color: var(--primary);">0 MT</b>
-            </div>
-
-            <h4 style="margin-bottom: 10px;">Finalizar Pedido</h4>
+            <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; display:flex; justify-content:space-between;"><b>TOTAL</b> <b id="cartTotal" style="color: var(--primary);">0 MT</b></div>
             <input type="text" id="cAddr" class="nice-input" placeholder="Endereço (Bairro/Rua)">
-            <select id="cPay" class="nice-input">
-                <option value="M-Pesa">M-Pesa</option>
-                <option value="E-mola">E-mola</option>
-                <option value="Numerário">Numerário</option>
-            </select>
-            
+            <select id="cPay" class="nice-input"><option value="M-Pesa">M-Pesa</option><option value="E-mola">E-mola</option><option value="Numerário">Numerário</option></select>
             <button class="action-btn" style="background:#25D366; color:#fff;" onclick="checkout()"><i class="fa-brands fa-whatsapp"></i> PEDIR NO WHATSAPP</button>
+        </div>
+    </div>
+
+    <div class="modal" id="infoModal">
+        <div class="sheet">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2 id="infoTitle">Informação</h2><i class="fa fa-times" onclick="closeModal('infoModal')" style="font-size:1.5rem; padding:10px;"></i></div>
+            <div id="infoContent" style="color: #ccc; line-height: 1.6; white-space: pre-wrap;"></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -285,6 +274,10 @@
 
         let products = [], cart = [], currentProd = null, selections = {}, waNumber = "25800000000";
         let isLoginMode = true;
+        window.storeAbout = "Sem informações.";
+        window.storeDelivery = "Sem informações.";
+        window.socialLink = "";
+        window.appDownloadLink = ""; // Link do App
 
         // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
@@ -297,15 +290,10 @@
                     document.getElementById('uNameDisplay').innerText = d.name || "Usuário";
                     document.getElementById('uEmailDisplay').innerText = user.email;
                     document.getElementById('uAvatar').innerText = (d.name?.[0] || "U").toUpperCase();
-                    document.getElementById('editName').value = d.name || "";
-                    document.getElementById('editPhone').value = d.phone || "";
-                    document.getElementById('editEmail').value = user.email;
-                    if(d.banned) { auth.signOut(); alert("Conta suspensa."); }
                 }
             } else {
                 document.getElementById('shopApp').classList.add('hidden');
                 document.getElementById('loginView').classList.remove('hidden');
-                toggleAuthUI();
             }
         });
 
@@ -314,185 +302,112 @@
             const pass = document.getElementById('regPass').value;
             const name = document.getElementById('regName').value;
             const phone = document.getElementById('regPhone').value;
-
+            if(pass.length < 6) return showToast("Senha curta!");
             try {
-                if (isLoginMode) {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    showToast("Bem-vindo de volta!");
-                } else {
-                    if(!name || !phone) return showToast("Preencha nome e telefone!");
+                if (isLoginMode) { await signInWithEmailAndPassword(auth, email, pass); }
+                else {
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, "users", cred.user.uid), {
-                        name, phone, email, role: 'cliente', createdAt: new Date(), banned: false
-                    });
-                    showToast("Conta criada!");
+                    await setDoc(doc(db, "users", cred.user.uid), { name, phone, email, role: 'cliente', date: Date.now() });
                 }
-            } catch (e) { showToast("Erro: " + e.message); }
+            } catch (e) { showToast("Erro de Autenticação"); }
         };
 
-        const toggleAuthUI = () => {
-            const n = document.getElementById('regName');
-            const p = document.getElementById('regPhone');
-            const txt = document.getElementById('toggleAuthMode');
-            if(isLoginMode) {
-                n.style.display = 'none'; p.style.display = 'none';
-                txt.innerHTML = `Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>`;
-            } else {
-                n.style.display = 'block'; p.style.display = 'block';
-                txt.innerHTML = `Já tem conta? <span style="color:var(--primary)">Entrar</span>`;
-            }
+        document.getElementById('toggleAuthMode').onclick = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('regName').style.display = isLoginMode ? 'none' : 'block';
+            document.getElementById('regPhone').style.display = isLoginMode ? 'none' : 'block';
+            document.getElementById('toggleAuthMode').innerHTML = isLoginMode ? 'Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>' : 'Já tem conta? <span style="color:var(--primary)">Entrar</span>';
         };
 
-        document.getElementById('toggleAuthMode').onclick = () => { isLoginMode = !isLoginMode; toggleAuthUI(); };
-
-        window.updateProfile = async () => {
-            const name = document.getElementById('editName').value;
-            const phone = document.getElementById('editPhone').value;
-            if(!auth.currentUser) return;
-            try {
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { name, phone });
-                showToast("Perfil Atualizado!");
-                document.getElementById('uNameDisplay').innerText = name;
-            } catch(e) { showToast("Erro ao atualizar."); }
-        };
-
-        window.resetPass = () => {
-            const email = auth.currentUser.email;
-            sendPasswordResetEmail(auth, email).then(() => showToast(`Email enviado para ${email}`));
-        };
-
-        // --- LOJA & DADOS ---
-        
-        // 1. Configs
+        // --- DADOS DINÂMICOS ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
                 if(d.whatsapp) waNumber = d.whatsapp;
+                if(d.appLink) window.appDownloadLink = d.appLink; // Captura o link do painel
+                if(d.aboutText) window.storeAbout = d.aboutText;
+                if(d.deliveryText) window.storeDelivery = d.deliveryText;
                 if(d.logo) { document.getElementById('headerLogo').src = d.logo; document.getElementById('headerLogo').style.display = 'block'; document.getElementById('headerText').style.display='none'; }
-                if(d.phone) document.getElementById('callBtn').href = `tel:${d.phone}`;
+                if(d.social) { window.socialLink = d.social; document.getElementById('socialBtn').classList.remove('hidden'); }
             }
         });
 
-        // 2. Banners
+        // Função do Botão de Download
+        window.downloadApp = () => {
+            if(window.appDownloadLink) {
+                window.open(window.appDownloadLink, '_blank');
+            } else {
+                showToast("O download oficial estará disponível em breve!");
+            }
+        };
+
+        // Banners
         onSnapshot(collection(db, "banners"), (snap) => {
-            document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => {
-                const b = d.data();
-                if(b.type === 'video') return `<div class="swiper-slide"><video src="${b.url}" autoplay loop muted playsinline></video></div>`;
-                return `<div class="swiper-slide"><img src="${b.url}"></div>`;
-            }).join('');
-            new Swiper('.main-swiper', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination' } });
+            document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => `<div class="swiper-slide"><img src="${d.data().url}"></div>`).join('');
+            new Swiper('.main-swiper', { loop: true, autoplay: true, pagination: { el: '.swiper-pagination' } });
         });
 
-        // 3. Categorias Dinâmicas (NOVO)
+        // Categorias
         onSnapshot(collection(db, "categories"), (snap) => {
-            const container = document.getElementById('catListDisplay');
-            let html = `
-                <div class="cat-chip active" onclick="setCategory('todos', this)">Todos</div>
-                <div class="cat-chip" onclick="setCategory('tarde', this)">Ofertas Tarde 🔥</div>
-            `;
-            snap.docs.forEach(d => {
-                const cat = d.data();
-                // Evita duplicatas se criar 'tarde' ou 'todos' no painel
-                if(cat.id !== 'tarde' && cat.id !== 'todos') {
-                    html += `<div class="cat-chip" onclick="setCategory('${cat.id}', this)">${cat.name}</div>`;
-                }
-            });
-            container.innerHTML = html;
+            let h = `<div class="cat-chip active" onclick="setCategory('todos', this)">Todos</div>`;
+            snap.docs.forEach(d => h += `<div class="cat-chip" onclick="setCategory('${d.data().id}', this)">${d.data().name}</div>`);
+            document.getElementById('catListDisplay').innerHTML = h;
         });
 
-        // 4. Produtos
+        // Produtos
         onSnapshot(collection(db, "products"), (snap) => {
             products = snap.docs.map(d => ({id: d.id, ...d.data()}));
             renderProducts(products);
         });
 
         window.renderProducts = (list) => {
-            document.getElementById('productGrid').innerHTML = list.map(p => `
-                <div class="card" onclick="openProduct('${p.id}')">
+            const oneDay = 24 * 60 * 60 * 1000;
+            document.getElementById('productGrid').innerHTML = list.map(p => {
+                const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
+                return `<div class="card" onclick="openProduct('${p.id}')">
+                    ${isNew ? '<div class="badge-new">NOVO</div>' : ''}
                     <div class="img-box"><img src="${p.img}"></div>
-                    <div class="p-details">
-                        <div class="p-title">${p.name}</div>
-                        <div class="p-footer"><div class="p-price">${Number(p.price).toLocaleString()} MT</div> <i class="fa fa-plus-circle" style="color:var(--primary)"></i></div>
-                    </div>
-                </div>
-            `).join('');
+                    <div class="p-details"><div class="p-title">${p.name}</div><div class="p-footer"><div class="p-price">${Number(p.price).toLocaleString()} MT</div> <i class="fa fa-plus-circle" style="color:var(--primary)"></i></div></div>
+                </div>`;
+            }).join('');
         };
-
-        window.filterProducts = (val) => renderProducts(products.filter(p => p.name.toLowerCase().includes(val.toLowerCase())));
 
         window.setCategory = (cat, el) => {
             document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
-            
-            const grid = document.getElementById('productGrid');
-            const tardeSec = document.getElementById('tardeSection');
-
-            if (cat === 'tarde') {
-                grid.classList.add('hidden');
-                tardeSec.classList.remove('hidden');
-                
-                const tardeItems = products.filter(p => p.cat === 'tarde');
-                document.getElementById('tardeWrapper').innerHTML = tardeItems.map(p => `
-                    <div class="swiper-slide" onclick="openProduct('${p.id}')">
-                        <div class="tarde-card">
-                            <img src="${p.img}" class="tarde-img">
-                            <div class="tarde-info">
-                                <div class="tarde-title">${p.name}</div>
-                                <div class="tarde-price">${Number(p.price).toLocaleString()}</div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                new Swiper('.tarde-swiper', { slidesPerView: 3, spaceBetween: 10 });
-            } else {
-                tardeSec.classList.add('hidden');
-                grid.classList.remove('hidden');
-                renderProducts(cat === 'todos' ? products : products.filter(p => p.cat === cat));
-            }
+            renderProducts(cat === 'todos' ? products : products.filter(p => p.cat === cat));
         };
 
-        // --- DETALHES ---
+        window.filterProducts = (v) => renderProducts(products.filter(p => p.name.toLowerCase().includes(v.toLowerCase())));
+
+        // --- MODAIS E CARRINHO ---
         window.openProduct = (id) => {
             currentProd = products.find(p => p.id === id);
             selections = { size: '', color: '' };
-            
-            const imgs = (currentProd.images && currentProd.images.length) ? currentProd.images : [currentProd.img];
+            const imgs = currentProd.images?.length ? currentProd.images : [currentProd.img];
             document.getElementById('detailWrapper').innerHTML = imgs.map(url => `<div class="swiper-slide"><img src="${url}"></div>`).join('');
-            
-            new Swiper('.detail-swiper', { pagination: { el: '.swiper-pagination', clickable: true }, loop: true });
-
+            new Swiper('.detail-swiper', { pagination: { el: '.swiper-pagination' } });
             document.getElementById('mName').innerText = currentProd.name;
             document.getElementById('mPrice').innerText = Number(currentProd.price).toLocaleString() + " MT";
-            
             document.getElementById('mSizes').innerHTML = (currentProd.sizes || ['Único']).map(s => `<div class="chip" onclick="sel('size', '${s}', this)">${s}</div>`).join('');
             document.getElementById('mColors').innerHTML = (currentProd.colors || ['Padrão']).map(c => `<div class="chip" onclick="sel('color', '${c}', this)">${c}</div>`).join('');
-            
             document.getElementById('prodModal').classList.add('open');
         };
 
         window.sel = (type, val, el) => {
             el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-            selections[type] = val;
+            el.classList.add('selected'); selections[type] = val;
         };
 
         window.addToCart = () => {
             if(!selections.size || !selections.color) return showToast("Escolha cor e tamanho!");
             cart.push({ ...currentProd, ...selections, cid: Date.now() });
             document.getElementById('cartCount').innerText = cart.length;
-            document.getElementById('prodModal').classList.remove('open');
-            showToast("Adicionado!");
+            closeModal('prodModal'); showToast("Adicionado!");
         };
 
-        // --- CARRINHO ---
         window.openCart = () => {
-            document.getElementById('cartList').innerHTML = cart.length ? cart.map(i => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">
-                    <div>${i.name} <br><small style="color:#888">${i.size} | ${i.color}</small></div>
-                    <div style="text-align:right;">${Number(i.price).toLocaleString()}<br><i class="fa fa-trash" style="color:red; cursor:pointer;" onclick="remItem(${i.cid})"></i></div>
-                </div>
-            `).join('') : '<p align="center">Vazio</p>';
-            
+            document.getElementById('cartList').innerHTML = cart.length ? cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div>${i.name}<br><small>${i.size} | ${i.color}</small></div><div>${Number(i.price).toLocaleString()} <i class="fa fa-trash" style="color:red" onclick="remItem(${i.cid})"></i></div></div>`).join('') : 'Carrinho Vazio';
             document.getElementById('cartTotal').innerText = cart.reduce((a, b) => a + Number(b.price), 0).toLocaleString() + " MT";
             document.getElementById('cartModal').classList.add('open');
         };
@@ -501,29 +416,18 @@
 
         window.checkout = async () => {
             const addr = document.getElementById('cAddr').value;
-            const pay = document.getElementById('cPay').value;
-            if(!addr || !cart.length) return showToast("Preencha endereço e adicione itens!");
-
-            const user = auth.currentUser;
-            const userName = document.getElementById('editName').value;
-            const userPhone = document.getElementById('editPhone').value;
+            if(!addr || !cart.length) return showToast("Dados incompletos!");
+            const u = auth.currentUser;
+            const snap = await getDoc(doc(db, "users", u.uid));
+            const ud = snap.data();
             const total = cart.reduce((a, b) => a + Number(b.price), 0);
-
-            await addDoc(collection(db, "orders"), {
-                uid: user.uid, userName, userPhone, userEmail: user.email, address: addr, payment: pay,
-                items: cart, total: total, status: 'pending', date: Date.now()
-            });
-
-            let msg = `*NOVO PEDIDO PREMIUM*%0A👤 ${userName}%0A📞 ${userPhone}%0A📍 ${addr}%0A💳 ${pay}%0A%0A*ITENS:*%0A`;
-            cart.forEach(i => msg += `▪ ${i.name} (${i.size}/${i.color}) - ${i.price}%0A`);
-            msg += `%0A*TOTAL: ${total.toLocaleString()} MT*`;
-            
+            await addDoc(collection(db, "orders"), { uid: u.uid, userName: ud.name, items: cart, total, date: Date.now() });
+            let msg = `*NOVO PEDIDO*%0A👤 ${ud.name}%0A📍 ${addr}%0A*TOTAL: ${total.toLocaleString()} MT*`;
             window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-            cart = []; document.getElementById('cartCount').innerText = 0;
-            document.getElementById('cartModal').classList.remove('open');
+            cart = []; document.getElementById('cartCount').innerText = 0; closeModal('cartModal');
         };
 
-        // --- UTILS ---
+        // Auxiliares
         window.switchView = (v, btn) => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -531,12 +435,11 @@
             document.getElementById('profileView').classList.toggle('hidden', v !== 'profile');
         };
         window.closeModal = (id) => document.getElementById(id).classList.remove('open');
-        window.showToast = (msg) => { 
-            const t = document.getElementById('toast'); 
-            t.querySelector('span').innerText = msg; 
-            t.classList.add('visible'); 
-            setTimeout(() => t.classList.remove('visible'), 3000); 
-        };
+        window.openTextModal = (title, content) => { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = content; document.getElementById('infoModal').classList.add('open'); };
+        window.openSocial = () => { if(window.socialLink) window.open(window.socialLink, '_blank'); };
+        window.showToast = (msg) => { const t = document.getElementById('toast'); t.querySelector('span').innerText = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 3000); };
+        window.togglePassView = (icon) => { const input = document.getElementById('regPass'); input.type = input.type === 'password' ? 'text' : 'password'; };
+        window.resetPass = () => { if(auth.currentUser) sendPasswordResetEmail(auth, auth.currentUser.email).then(() => showToast("E-mail de redefinição enviado!")); };
     </script>
 </body>
 </html>
