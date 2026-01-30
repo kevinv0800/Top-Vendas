@@ -11,32 +11,54 @@
 
     <style>
         :root {
-            --bg-dark: #050505;
-            --bg-card: #121212;
+            /* Fundo atualizado para um gradiente bonito e profundo */
+            --bg-dark: #0f0c29; 
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            
+            --bg-card: rgba(20, 20, 25, 0.6);
             --primary: #29b6f6;
             --primary-glow: rgba(41, 182, 246, 0.4);
             --valentine-red: #ff4d6d;
             --text-main: #ffffff;
-            --text-muted: #9e9e9e;
-            --border: rgba(255, 255, 255, 0.08);
+            --text-muted: #b0b0b0;
+            --border: rgba(255, 255, 255, 0.1);
             --radius: 16px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 90px; overflow-x: hidden; }
         
-        /* A classe hidden usa !important para garantir que esconda, 
-           então no JS usaremos remove('hidden') para mostrar */
+        body { 
+            background: var(--bg-gradient); 
+            background-attachment: fixed; /* Garante que o fundo fique bonito ao rolar */
+            color: var(--text-main); 
+            padding-bottom: 90px; 
+            overflow-x: hidden; 
+            min-height: 100vh;
+        }
+        
+        /* Container Central para PC (Responsividade Universal) */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
         .hidden { display: none !important; }
 
         /* --- TELA DE LOGIN / LOADING (UNIVERSAL) --- */
         #loginView { 
-            position: fixed; inset: 0; z-index: 3000; background: var(--bg-dark); 
+            position: fixed; inset: 0; z-index: 3000; 
+            background: var(--bg-gradient);
             display: flex; flex-direction: column; justify-content: center; padding: 30px; 
             transition: opacity 0.5s ease;
         }
 
-        /* Animações da Logo/Texto */
+        /* Responsividade do Login no PC */
+        @media (min-width: 768px) {
+            #loginView { align-items: center; }
+            .login-card { width: 400px; }
+        }
+
         .dynamic-logo { max-width: 150px; max-height: 150px; object-fit: contain; margin-bottom: 20px; animation: pulseLogo 2s infinite ease-in-out; display: block; margin-left: auto; margin-right: auto; }
         .logo-text-anim { 
             font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 20px;
@@ -47,15 +69,16 @@
         @keyframes shine { to { background-position: 200% center; } }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        .login-card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .nice-input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        .nice-input:focus { border-color: var(--primary); }
+        .login-card { background: rgba(0,0,0,0.3); padding: 25px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(20px); width: 100%; }
+        .nice-input { width: 100%; padding: 15px; background: rgba(0,0,0,0.4); border: 1px solid #444; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .nice-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
         
-        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; box-shadow: 0 0 15px var(--primary-glow); }
+        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; box-shadow: 0 0 15px var(--primary-glow); transition: transform 0.2s; }
+        .action-btn:hover { transform: scale(1.02); }
         
         .pass-group { position: relative; margin-bottom: 15px; }
         .pass-group input { margin-bottom: 0; padding-right: 45px; }
-        .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; padding: 5px; }
+        .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #bbb; cursor: pointer; padding: 5px; }
 
         /* --- APP UI --- */
         #toast { 
@@ -69,7 +92,7 @@
         header {
             position: sticky; top: 0; z-index: 100; padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px);
+            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border); height: 70px;
         }
         .logo-img { height: 40px; display: none; }
@@ -81,43 +104,84 @@
 
         .categories { display: flex; gap: 10px; padding: 0 20px 15px; overflow-x: auto; scrollbar-width: none; }
         .cat-chip { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 18px; border-radius: 50px; white-space: nowrap; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .cat-chip:hover { background: rgba(255,255,255,0.1); }
         .cat-chip.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         .hero-section { padding: 0 20px 20px; }
         .main-swiper { border-radius: var(--radius); height: 180px; border: 1px solid var(--border); }
+        @media(min-width: 768px) { .main-swiper { height: 350px; } }
         .main-swiper img, .main-swiper video { width: 100%; height: 100%; object-fit: cover; }
         .swiper-slide[onclick] { cursor: pointer; }
 
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
-        .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.2s; }
+        /* GRID ADAPTÁVEL UNIVERSAL */
+        .grid { 
+            display: grid; 
+            /* Auto-fill para PC e Mobile: Se ajusta a tela */
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); 
+            gap: 15px; 
+            padding: 0 20px; 
+        }
+        
+        .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.3s; backdrop-filter: blur(5px); }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
         .card:active { transform: scale(0.98); }
-        .img-box { height: 160px; position: relative; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .img-box { height: 160px; position: relative; overflow: hidden; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover .img-box img { transform: scale(1.1); }
+        
         .p-details { padding: 12px; }
         .p-title { font-size: 0.9rem; font-weight: 600; height: 40px; overflow: hidden; line-height: 1.3; }
         .p-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
         .p-price { font-size: 1rem; font-weight: 800; color: #fff; }
 
         .badge-new { position: absolute; top: 10px; left: 10px; z-index: 10; background: var(--primary); color: #000; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; box-shadow: 0 0 10px var(--primary-glow); animation: pulse 2s infinite; }
+
+        /* ÍCONES ESPECIAIS (Celular, Camisa, Tênis) */
+        .special-icon-box {
+            position: absolute; top: 10px; right: 10px; z-index: 15;
+            width: 30px; height: 30px; background: rgba(0,0,0,0.6); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
         
-        /* Animações Love */
+        /* Animação Vibrar (Celular) */
+        .anim-vibrate { animation: vibrate 0.3s linear infinite paused; }
+        .card:hover .anim-vibrate, .anim-vibrate-infinite { animation: vibrate 2s linear infinite; }
+        
+        @keyframes vibrate { 
+            0% { transform: rotate(0deg); } 
+            25% { transform: rotate(10deg); } 
+            50% { transform: rotate(0deg); } 
+            75% { transform: rotate(-10deg); } 
+            100% { transform: rotate(0deg); } 
+        }
+
+        /* Animações Love (Mantido) */
         @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.3); } 28% { transform: scale(1); } 42% { transform: scale(1.3); } 70% { transform: scale(1); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
         @keyframes floatFlower { 0% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(10deg); } 100% { transform: translateY(0) rotate(0); } }
 
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .nav-btn { font-size: 1.4rem; color: #666; position: relative; transition: 0.3s; cursor: pointer; }
+        .nav-btn:hover { color: #fff; }
         .nav-btn.active { color: var(--primary); transform: translateY(-3px); }
         .badge { position: absolute; top: -5px; right: -8px; background: var(--valentine-red); color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; display: flex; align-items: flex-end; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; display: flex; align-items: flex-end; justify-content: center; }
         .modal.open { opacity: 1; pointer-events: all; }
-        .sheet { width: 100%; background: #1a1a1a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s; max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
+        
+        /* Modal adaptável PC */
+        .sheet { width: 100%; max-width: 500px; background: #1a1a1a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s; max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
+        @media(min-width: 768px) { .sheet { border-radius: 20px; transform: translateY(20px); margin-bottom: 20px; } .modal.open .sheet { transform: translateY(0); } }
+        
         .modal.open .sheet { transform: translateY(0); }
         
         .detail-swiper { width: 100%; height: 300px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; background: #000; }
-        .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; cursor: pointer; }
+        .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; cursor: pointer; transition: 0.2s; }
+        .chip:hover { background: #333; }
         .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
 
         .profile-header { text-align: center; margin-bottom: 30px; }
@@ -127,12 +191,15 @@
             background: var(--bg-card); width: 100%; padding: 15px; 
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border); cursor: pointer; color: #ddd;
+            transition: 0.2s;
         }
+        .info-btn:hover { background: rgba(255,255,255,0.05); padding-left: 20px; }
         .info-btn:first-child { border-top-left-radius: 12px; border-top-right-radius: 12px; }
         .info-btn:last-child { border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; border-bottom: none; }
         .info-btn i { color: var(--primary); width: 25px; }
 
-        .social-box { background: linear-gradient(45deg, #405DE6, #833AB4); margin-top: 20px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .social-box { background: linear-gradient(45deg, #405DE6, #833AB4); margin-top: 20px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+        .social-box:hover { transform: scale(1.02); }
     </style>
 </head>
 <body>
@@ -145,7 +212,7 @@
             <div id="loginLogoText" class="logo-text-anim hidden">TOP VENDAS</div>
             
             <h2 id="loginTitle" style="margin-top:20px;">Bem-vindo</h2>
-            <p id="loginSub" style="color: #888;">Faça login para acessar</p>
+            <p id="loginSub" style="color: #bbb;">Faça login para acessar a loja</p>
         </div>
         
         <div class="login-card" id="authBox">
@@ -166,79 +233,81 @@
         
         <div id="loadingBox" style="text-align:center; display:none; margin-top:20px;">
             <i class="fa fa-spinner fa-spin" style="font-size:2rem; color:var(--primary)"></i>
-            <p style="color:#666; margin-top:10px;">Carregando loja...</p>
+            <p style="color:#bbb; margin-top:10px;">A preparar a loja...</p>
         </div>
     </div>
 
-    <div id="shopApp" class="hidden">
-        <header>
-            <div style="display:flex; align-items:center;">
-                <img id="headerLogo" class="logo-img" src="" alt="Logo">
-                <span id="headerText" class="logo-text">TOP VENDAS</span>
-            </div>
-            <a href="tel:" id="callBtn" style="color:#fff; font-size:1.2rem;"><i class="fa-solid fa-phone"></i></a>
-        </header>
-
-        <div id="homeView">
-            <div class="search-bar">
-                <i class="fa-solid fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Buscar produtos..." oninput="filterProducts(this.value)">
-            </div>
-
-            <div class="hero-section">
-                <div class="swiper main-swiper">
-                    <div class="swiper-wrapper" id="bannerWrapper"></div>
-                    <div class="swiper-pagination"></div>
+    <div class="app-container">
+        <div id="shopApp" class="hidden">
+            <header>
+                <div style="display:flex; align-items:center;">
+                    <img id="headerLogo" class="logo-img" src="" alt="Logo">
+                    <span id="headerText" class="logo-text">TOP VENDAS</span>
                 </div>
+                <a href="tel:" id="callBtn" style="color:#fff; font-size:1.2rem;"><i class="fa-solid fa-phone"></i></a>
+            </header>
+
+            <div id="homeView">
+                <div class="search-bar">
+                    <i class="fa-solid fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Buscar produtos..." oninput="filterProducts(this.value)">
+                </div>
+
+                <div class="hero-section">
+                    <div class="swiper main-swiper">
+                        <div class="swiper-wrapper" id="bannerWrapper"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+
+                <div class="categories" id="catListDisplay">
+                    <div class="cat-chip active">Todos</div>
+                </div>
+
+                <div class="grid" id="productGrid"></div>
+                <div style="height: 100px;"></div> 
             </div>
 
-            <div class="categories" id="catListDisplay">
-                <div class="cat-chip active">Todos</div>
+            <div id="profileView" class="hidden" style="padding: 20px;">
+                <div class="profile-header">
+                    <div class="p-avatar" id="uAvatar">U</div>
+                    <h2 id="uNameDisplay">Usuário</h2>
+                    <p id="uEmailDisplay" style="color: var(--text-muted); font-size: 0.9rem;">...</p>
+                </div>
+
+                <div style="background:var(--bg-card); border-radius:12px; border:1px solid var(--border); overflow:hidden;">
+                    <div class="info-btn" onclick="downloadApp()">
+                        <span><i class="fa fa-cloud-arrow-down"></i> Baixar App</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                    </div>
+                    
+                    <div class="info-btn" onclick="openTextModal('Sobre Nós', window.storeAbout)">
+                        <span><i class="fa fa-store"></i> Sobre a Loja</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                    </div>
+                    <div class="info-btn" onclick="openTextModal('Entregas', window.storeDelivery)">
+                        <span><i class="fa fa-truck"></i> Informações de Entrega</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                    </div>
+                    <div class="info-btn" onclick="resetPass()">
+                        <span><i class="fa fa-lock"></i> Redefinir Senha</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
+                    </div>
+                </div>
+
+                <div id="socialBtn" class="social-box hidden" onclick="openSocial()">
+                    <i class="fa-brands fa-instagram" style="font-size: 2rem;"></i>
+                    <div>
+                        <div style="font-weight: bold;">Siga-nos</div>
+                        <div style="font-size: 0.8rem; opacity:0.8;">Acompanhe as novidades</div>
+                    </div>
+                </div>
+
+                <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 30px;">Sair da Conta</button>
+                <div style="height: 100px;"></div>
             </div>
 
-            <div class="grid" id="productGrid"></div>
-            <div style="height: 100px;"></div> 
-        </div>
-
-        <div id="profileView" class="hidden" style="padding: 20px;">
-            <div class="profile-header">
-                <div class="p-avatar" id="uAvatar">U</div>
-                <h2 id="uNameDisplay">Usuário</h2>
-                <p id="uEmailDisplay" style="color: var(--text-muted); font-size: 0.9rem;">...</p>
+            <div class="bottom-nav">
+                <div class="nav-btn active" onclick="switchView('home', this)"><i class="fa-solid fa-house"></i></div>
+                <div class="nav-btn" onclick="openCart()"><i class="fa-solid fa-bag-shopping"></i><span class="badge" id="cartCount">0</span></div>
+                <div class="nav-btn" onclick="switchView('profile', this)"><i class="fa-solid fa-user"></i></div>
             </div>
-
-            <div style="background:#1a1a1a; border-radius:12px; border:1px solid var(--border);">
-                <div class="info-btn" onclick="downloadApp()">
-                    <span><i class="fa fa-cloud-arrow-down"></i> Baixar App</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
-                </div>
-                
-                <div class="info-btn" onclick="openTextModal('Sobre Nós', window.storeAbout)">
-                    <span><i class="fa fa-store"></i> Sobre a Loja</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
-                </div>
-                <div class="info-btn" onclick="openTextModal('Entregas', window.storeDelivery)">
-                    <span><i class="fa fa-truck"></i> Informações de Entrega</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
-                </div>
-                <div class="info-btn" onclick="resetPass()">
-                    <span><i class="fa fa-lock"></i> Redefinir Senha</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
-                </div>
-            </div>
-
-            <div id="socialBtn" class="social-box hidden" onclick="openSocial()">
-                <i class="fa-brands fa-instagram" style="font-size: 2rem;"></i>
-                <div>
-                    <div style="font-weight: bold;">Siga-nos</div>
-                    <div style="font-size: 0.8rem; opacity:0.8;">Acompanhe as novidades</div>
-                </div>
-            </div>
-
-            <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 30px;">Sair da Conta</button>
-            <div style="height: 100px;"></div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-btn active" onclick="switchView('home', this)"><i class="fa-solid fa-house"></i></div>
-            <div class="nav-btn" onclick="openCart()"><i class="fa-solid fa-bag-shopping"></i><span class="badge" id="cartCount">0</span></div>
-            <div class="nav-btn" onclick="switchView('profile', this)"><i class="fa-solid fa-user"></i></div>
         </div>
     </div>
 
@@ -246,7 +315,7 @@
         <div class="sheet">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                 <h2 id="mName" style="font-size: 1.2rem;">Produto</h2>
-                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:10px;"></i>
+                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i>
             </div>
             <div class="swiper detail-swiper">
                 <div class="swiper-wrapper" id="detailWrapper"></div>
@@ -261,7 +330,7 @@
 
     <div class="modal" id="cartModal">
         <div class="sheet">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2>Seu Carrinho</h2><i class="fa fa-times" onclick="closeModal('cartModal')" style="font-size:1.5rem; padding:10px;"></i></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2>Seu Carrinho</h2><i class="fa fa-times" onclick="closeModal('cartModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i></div>
             <div id="cartList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;"></div>
             <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; display:flex; justify-content:space-between;"><b>TOTAL</b> <b id="cartTotal" style="color: var(--primary);">0 MT</b></div>
             <input type="text" id="cAddr" class="nice-input" placeholder="Endereço (Bairro/Rua)">
@@ -272,7 +341,7 @@
 
     <div class="modal" id="infoModal">
         <div class="sheet">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2 id="infoTitle">Informação</h2><i class="fa fa-times" onclick="closeModal('infoModal')" style="font-size:1.5rem; padding:10px;"></i></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2 id="infoTitle">Informação</h2><i class="fa fa-times" onclick="closeModal('infoModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i></div>
             <div id="infoContent" style="color: #ccc; line-height: 1.6; white-space: pre-wrap;"></div>
         </div>
     </div>
@@ -335,7 +404,6 @@
             }
         });
 
-        // LÓGICA DE CADASTRO CORRIGIDA
         window.handleAuth = async () => {
             const email = document.getElementById('regEmail').value;
             const pass = document.getElementById('regPass').value;
@@ -345,24 +413,15 @@
             
             try {
                 if (isLoginMode) {
-                    // MODO LOGIN
                     await signInWithEmailAndPassword(auth, email, pass);
                 } else {
-                    // MODO CADASTRO - Validar campos extras
                     const name = document.getElementById('regName').value;
                     const phone = document.getElementById('regPhone').value;
-                    
-                    if(!name || !phone) {
-                        return showToast("Preencha Nome e Celular!");
-                    }
+                    if(!name || !phone) return showToast("Preencha Nome e Celular!");
 
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
                     await setDoc(doc(db, "users", cred.user.uid), { 
-                        name: name, 
-                        phone: phone, 
-                        email: email, 
-                        role: 'cliente', 
-                        date: Date.now() 
+                        name: name, phone: phone, email: email, role: 'cliente', date: Date.now() 
                     });
                 }
             } catch (e) { 
@@ -375,23 +434,19 @@
             }
         };
 
-        // LÓGICA DE ALTERNAR LOGIN/CADASTRO CORRIGIDA
         document.getElementById('toggleAuthMode').onclick = () => {
             isLoginMode = !isLoginMode;
-            
             const nameInput = document.getElementById('regName');
             const phoneInput = document.getElementById('regPhone');
             const btn = document.getElementById('authBtn');
             const toggleTxt = document.getElementById('toggleAuthMode');
 
             if (isLoginMode) {
-                // VOLTAR PARA LOGIN
                 nameInput.classList.add('hidden');
                 phoneInput.classList.add('hidden');
                 btn.innerText = 'ENTRAR';
                 toggleTxt.innerHTML = 'Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>';
             } else {
-                // IR PARA CADASTRO (Mostrar campos)
                 nameInput.classList.remove('hidden');
                 phoneInput.classList.remove('hidden');
                 btn.innerText = 'CADASTRAR';
@@ -399,7 +454,6 @@
             }
         };
 
-        // --- CONFIGURAÇÕES DA LOJA ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
@@ -427,7 +481,6 @@
         window.downloadApp = () => { window.appDownloadLink && window.appDownloadLink.length > 5 ? window.open(window.appDownloadLink, '_blank') : showToast("Link indisponível no momento."); };
         window.openSocial = () => { window.socialLink && window.socialLink.length > 5 ? window.open(window.socialLink, '_blank') : showToast("Rede social não configurada."); };
 
-        // --- PRODUTOS & CORE ---
         onSnapshot(collection(db, "banners"), (snap) => {
             document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => {
                 const b = d.data();
@@ -436,7 +489,7 @@
                     ${b.type === 'video' ? `<video src="${b.url}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${b.url}">`}
                 </div>`;
             }).join('');
-            new Swiper('.main-swiper', { loop: true, autoplay: true, pagination: { el: '.swiper-pagination' } });
+            new Swiper('.main-swiper', { loop: true, autoplay: true, pagination: { el: '.swiper-pagination' }, slidesPerView: 1 });
         });
 
         onSnapshot(collection(db, "categories"), (snap) => {
@@ -450,19 +503,28 @@
             renderProducts(products);
         });
 
+        // --- RENDERIZAÇÃO INTELIGENTE COM ÍCONES ---
         window.renderProducts = (list) => {
             const oneDay = 24 * 60 * 60 * 1000;
             document.getElementById('productGrid').innerHTML = list.map(p => {
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
                 
-                // LÓGICA LOVE: Verifica se "Love" está no nome ou categoria
                 const nameLower = p.name.toLowerCase();
                 const isLove = nameLower.includes('love') || (p.cat && p.cat.toLowerCase().includes('love'));
                 
-                // Estilos e Animações Condicionais
+                // Lógica de Ícones Especiais
+                let specialIcon = '';
+                if (nameLower.includes('celular') || nameLower.includes('telefone')) {
+                    specialIcon = `<div class="special-icon-box anim-vibrate-infinite"><i class="fa-solid fa-mobile-screen-button"></i></div>`;
+                } else if (nameLower.includes('camisa')) {
+                    specialIcon = `<div class="special-icon-box"><i class="fa-solid fa-shirt"></i></div>`;
+                } else if (nameLower.includes('sapato') || nameLower.includes('tênis')) {
+                    specialIcon = `<div class="special-icon-box"><i class="fa-solid fa-shoe-prints"></i></div>`;
+                }
+
+                // Estilos Love
                 let cardStyle = "";
                 let animDecors = "";
-                
                 if(isLove) {
                     cardStyle = "background: linear-gradient(135deg, #e91e63, #ff4d6d); border: 1px solid #ff8fa3;";
                     animDecors = `
@@ -473,11 +535,14 @@
                             <i class="fa-solid fa-spa" style="font-size:1.4rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3));"></i>
                         </div>
                     `;
+                    // Se for love, o ícone de coração prevalece sobre os outros, ou removemos a linha abaixo se quiser os dois.
+                    // Vou manter a prioridade do ícone especial se ele existir, senão o coração.
+                    if (specialIcon) animDecors = ''; 
                 }
 
                 return `<div class="card" onclick="openProduct('${p.id}')" style="${cardStyle}">
                     ${isNew ? '<div class="badge-new">NOVO</div>' : ''}
-                    ${animDecors}
+                    ${specialIcon ? specialIcon : animDecors}
                     <div class="img-box"><img src="${p.img}"></div>
                     <div class="p-details">
                         <div class="p-title">${p.name}</div>
@@ -524,7 +589,7 @@
         };
 
         window.openCart = () => {
-            document.getElementById('cartList').innerHTML = cart.length ? cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div>${i.name}<br><small>${i.size} | ${i.color}</small></div><div>${Number(i.price).toLocaleString()} <i class="fa fa-trash" style="color:red" onclick="remItem(${i.cid})"></i></div></div>`).join('') : 'Carrinho Vazio';
+            document.getElementById('cartList').innerHTML = cart.length ? cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div>${i.name}<br><small>${i.size} | ${i.color}</small></div><div>${Number(i.price).toLocaleString()} <i class="fa fa-trash" style="color:red; cursor:pointer;" onclick="remItem(${i.cid})"></i></div></div>`).join('') : 'Carrinho Vazio';
             document.getElementById('cartTotal').innerText = cart.reduce((a, b) => a + Number(b.price), 0).toLocaleString() + " MT";
             document.getElementById('cartModal').classList.add('open');
         };
