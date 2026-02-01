@@ -3,202 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOP VENDAS | Premium</title>
+    <title>TOP VENDAS | Premium Store</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
     <style>
         :root {
-            /* Fundo atualizado para um gradiente bonito e profundo */
+            /* Cores e Temas */
             --bg-dark: #0f0c29; 
             --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --bg-card: rgba(30, 30, 35, 0.7);
+            --bg-card-blur: blur(12px);
             
-            --bg-card: rgba(20, 20, 25, 0.6);
             --primary: #29b6f6;
-            --primary-glow: rgba(41, 182, 246, 0.4);
+            --primary-glow: rgba(41, 182, 246, 0.5);
             --valentine-red: #ff4d6d;
+            --valentine-glow: rgba(255, 77, 109, 0.5);
+            
             --text-main: #ffffff;
             --text-muted: #b0b0b0;
-            --border: rgba(255, 255, 255, 0.1);
-            --radius: 16px;
+            --border: rgba(255, 255, 255, 0.08);
+            --radius: 18px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background: var(--bg-gradient); 
-            background-attachment: fixed; /* Garante que o fundo fique bonito ao rolar */
+            background-attachment: fixed;
             color: var(--text-main); 
-            padding-bottom: 90px; 
+            padding-bottom: 95px; 
             overflow-x: hidden; 
             min-height: 100vh;
         }
         
-        /* Container Central para PC (Responsividade Universal) */
-        .app-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-
+        /* Utilitários */
+        .app-container { max-width: 1200px; margin: 0 auto; position: relative; }
         .hidden { display: none !important; }
+        .fade-in-up { animation: fadeInUp 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
+        
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* --- TELA DE LOGIN / LOADING (UNIVERSAL) --- */
+        /* --- LOGIN & LOADING --- */
         #loginView { 
             position: fixed; inset: 0; z-index: 3000; 
             background: var(--bg-gradient);
             display: flex; flex-direction: column; justify-content: center; padding: 30px; 
             transition: opacity 0.5s ease;
         }
-
-        /* Responsividade do Login no PC */
         @media (min-width: 768px) {
             #loginView { align-items: center; }
             .login-card { width: 400px; }
         }
 
-        .dynamic-logo { max-width: 150px; max-height: 150px; object-fit: contain; margin-bottom: 20px; animation: pulseLogo 2s infinite ease-in-out; display: block; margin-left: auto; margin-right: auto; }
+        .dynamic-logo { max-width: 140px; max-height: 140px; object-fit: contain; margin-bottom: 20px; animation: pulseLogo 2s infinite ease-in-out; display: block; margin-left: auto; margin-right: auto; }
         .logo-text-anim { 
             font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 20px;
             background: linear-gradient(90deg, #fff, var(--primary), #fff); background-size: 200% auto;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: shine 3s linear infinite; 
         }
-        @keyframes shine { to { background-position: 200% center; } }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        .login-card { background: rgba(0,0,0,0.3); padding: 25px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(20px); width: 100%; }
-        .nice-input { width: 100%; padding: 15px; background: rgba(0,0,0,0.4); border: 1px solid #444; border-radius: 10px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        .nice-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
         
-        .action-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; box-shadow: 0 0 15px var(--primary-glow); transition: transform 0.2s; }
-        .action-btn:hover { transform: scale(1.02); }
+        .login-card { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 24px; border: 1px solid var(--border); backdrop-filter: blur(20px); width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .nice-input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; font-size: 1rem; }
+        .nice-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); }
+        
+        .action-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; background: var(--primary); color: #000; margin-top: 10px; box-shadow: 0 0 20px var(--primary-glow); transition: transform 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .action-btn:active { transform: scale(0.96); }
         
         .pass-group { position: relative; margin-bottom: 15px; }
         .pass-group input { margin-bottom: 0; padding-right: 45px; }
         .pass-toggle { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #bbb; cursor: pointer; padding: 5px; }
 
-        /* --- APP UI --- */
+        /* --- HEADER & UI --- */
         #toast { 
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); 
             background: #222; color: #fff; padding: 12px 24px; border-radius: 50px; 
             z-index: 5000; transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
-            border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-weight: 600;
         }
         #toast.visible { transform: translateX(-50%) translateY(0); }
 
         header {
-            position: sticky; top: 0; z-index: 100; padding: 15px 20px;
+            position: sticky; top: 0; z-index: 100; padding: 10px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(15px);
+            background: rgba(15, 12, 41, 0.9); backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border); height: 70px;
         }
-        .logo-img { height: 40px; display: none; }
-        .logo-text { font-size: 1.2rem; font-weight: 800; background: linear-gradient(45deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-img { height: 45px; display: none; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        .logo-text { font-size: 1.4rem; font-weight: 900; background: linear-gradient(45deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
 
-        .search-bar { padding: 15px 20px; position: relative; }
-        .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); padding: 12px 15px 12px 45px; border-radius: 12px; color: #fff; outline: none; }
-        .search-icon { position: absolute; left: 35px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-bar { padding: 15px 20px 5px; position: relative; }
+        .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); padding: 14px 15px 14px 45px; border-radius: 16px; color: #fff; outline: none; font-size: 0.95rem; backdrop-filter: blur(5px); }
+        .search-icon { position: absolute; left: 38px; top: 50%; transform: translateY(-30%); color: var(--text-muted); }
 
-        .categories { display: flex; gap: 10px; padding: 0 20px 15px; overflow-x: auto; scrollbar-width: none; }
-        .cat-chip { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 18px; border-radius: 50px; white-space: nowrap; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
-        .cat-chip:hover { background: rgba(255,255,255,0.1); }
+        .categories { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .cat-chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 10px 20px; border-radius: 50px; white-space: nowrap; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
         .cat-chip.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-        .hero-section { padding: 0 20px 20px; }
-        .main-swiper { border-radius: var(--radius); height: 180px; border: 1px solid var(--border); }
-        @media(min-width: 768px) { .main-swiper { height: 350px; } }
+        /* --- BANNERS ADAPTATIVOS --- */
+        .hero-section { padding: 0 20px 10px; }
+        .main-swiper { 
+            border-radius: var(--radius); 
+            /* Aspect Ratio substitui altura fixa para melhor performance universal */
+            width: 100%;
+            aspect-ratio: 16/9; 
+            max-height: 400px;
+            border: 1px solid var(--border); 
+            position: relative; overflow: hidden; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        /* Ajuste para telas muito altas/mobile se necessário */
+        @media(max-width: 480px) { .main-swiper { aspect-ratio: 4/3; } }
+        
         .main-swiper img, .main-swiper video { width: 100%; height: 100%; object-fit: cover; }
-        .swiper-slide[onclick] { cursor: pointer; }
-
-        /* GRID ADAPTÁVEL UNIVERSAL */
+        .swiper-slide { position: relative; background: #000; }
+        
+        /* --- GRID PRODUTOS --- */
         .grid { 
             display: grid; 
-            /* Auto-fill para PC e Mobile: Se ajusta a tela */
-            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); 
+            grid-template-columns: repeat(2, 1fr); /* 2 Colunas no Mobile */
             gap: 15px; 
-            padding: 0 20px; 
+            padding: 10px 20px; 
         }
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
         
-        .card { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.3s; backdrop-filter: blur(5px); }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
-        .card:active { transform: scale(0.98); }
+        .card { 
+            background: var(--bg-card); border-radius: var(--radius); overflow: hidden; 
+            border: 1px solid var(--border); position: relative; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            backdrop-filter: var(--bg-card-blur); display: flex; flex-direction: column;
+        }
+        .card:active { transform: scale(0.97); }
         
-        .img-box { height: 160px; position: relative; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover .img-box img { transform: scale(1.1); }
+        .img-box { 
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Quadrado perfeito para consistência */
+            position: relative; overflow: hidden; background: #1a1a1a;
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
         
-        .p-details { padding: 12px; }
-        .p-title { font-size: 0.9rem; font-weight: 600; height: 40px; overflow: hidden; line-height: 1.3; }
-        .p-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .p-details { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .p-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; line-height: 1.4; color: #eee; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .p-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .p-price { font-size: 1rem; font-weight: 800; color: #fff; }
 
         .badge-new { position: absolute; top: 10px; left: 10px; z-index: 10; background: var(--primary); color: #000; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; box-shadow: 0 0 10px var(--primary-glow); animation: pulse 2s infinite; }
 
-        /* ÍCONES ESPECIAIS (Celular, Camisa, Tênis) */
+        /* --- ANIMAÇÕES AVANÇADAS --- */
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes heartPulse { 0% { transform: scale(1); } 15% { transform: scale(1.25); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes flowerFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
+        @keyframes vibrate { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 60% { transform: translate(2px, 2px); } 80% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+
+        /* Ícones Especiais */
         .special-icon-box {
-            position: absolute; top: 10px; right: 10px; z-index: 15;
-            width: 30px; height: 30px; background: rgba(0,0,0,0.6); 
+            position: absolute; top: 8px; right: 8px; z-index: 15;
+            width: 28px; height: 28px; background: rgba(0,0,0,0.6); 
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 0.8rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
+        .anim-vibrate { animation: vibrate 0.8s linear infinite; }
         
-        /* Animação Vibrar (Celular) */
-        .anim-vibrate { animation: vibrate 0.3s linear infinite paused; }
-        .card:hover .anim-vibrate, .anim-vibrate-infinite { animation: vibrate 2s linear infinite; }
+        .love-icon {
+            position: absolute; top: 10px; right: 10px; z-index: 20;
+            color: #fff; font-size: 1.4rem;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            animation: heartPulse 1.5s infinite ease-in-out;
+        }
         
-        @keyframes vibrate { 
-            0% { transform: rotate(0deg); } 
-            25% { transform: rotate(10deg); } 
-            50% { transform: rotate(0deg); } 
-            75% { transform: rotate(-10deg); } 
-            100% { transform: rotate(0deg); } 
+        .flower-icon {
+            position: absolute; bottom: 55px; right: 8px; z-index: 20;
+            color: #fff; font-size: 1.4rem;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            animation: flowerFloat 3s infinite ease-in-out;
+            pointer-events: none;
         }
 
-        /* Animações Love (Mantido) */
-        @keyframes heartBeat { 0% { transform: scale(1); } 14% { transform: scale(1.3); } 28% { transform: scale(1); } 42% { transform: scale(1.3); } 70% { transform: scale(1); } }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-        @keyframes floatFlower { 0% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(10deg); } 100% { transform: translateY(0) rotate(0); } }
-
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); padding: 15px 30px; border-radius: 50px; display: flex; justify-content: space-between; border: 1px solid var(--border); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nav-btn { font-size: 1.4rem; color: #666; position: relative; transition: 0.3s; cursor: pointer; }
+        /* --- NAVEGAÇÃO --- */
+        .bottom-nav { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 400px; 
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(15px); 
+            padding: 12px 30px; border-radius: 50px; 
+            display: flex; justify-content: space-between; border: 1px solid rgba(255,255,255,0.15); 
+            z-index: 999; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+        }
+        .nav-btn { font-size: 1.4rem; color: #777; position: relative; transition: 0.3s; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 50px; height: 40px; }
         .nav-btn:hover { color: #fff; }
-        .nav-btn.active { color: var(--primary); transform: translateY(-3px); }
-        .badge { position: absolute; top: -5px; right: -8px; background: var(--valentine-red); color: #fff; font-size: 0.6rem; padding: 2px 5px; border-radius: 10px; font-weight: bold; }
+        .nav-btn.active { color: var(--primary); transform: translateY(-2px); }
+        .nav-btn.active i { filter: drop-shadow(0 0 10px var(--primary)); }
+        .badge { position: absolute; top: 0; right: 5px; background: var(--valentine-red); color: #fff; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; border: 1px solid #000; }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; display: flex; align-items: flex-end; justify-content: center; }
+        /* --- MODAL --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; display: flex; align-items: flex-end; justify-content: center; backdrop-filter: blur(5px); }
         .modal.open { opacity: 1; pointer-events: all; }
         
-        /* Modal adaptável PC */
-        .sheet { width: 100%; max-width: 500px; background: #1a1a1a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s; max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
+        .sheet { width: 100%; max-width: 500px; background: #18181b; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         @media(min-width: 768px) { .sheet { border-radius: 20px; transform: translateY(20px); margin-bottom: 20px; } .modal.open .sheet { transform: translateY(0); } }
-        
         .modal.open .sheet { transform: translateY(0); }
         
-        .detail-swiper { width: 100%; height: 300px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .detail-swiper img { width: 100%; height: 100%; object-fit: contain; background: #000; }
-        .chip { padding: 8px 15px; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; margin-right: 5px; margin-bottom: 5px; display: inline-block; cursor: pointer; transition: 0.2s; }
-        .chip:hover { background: #333; }
-        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
+        .detail-swiper { width: 100%; height: 350px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); background: #000; }
+        .detail-swiper img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .chip { padding: 10px 18px; border: 1px solid #333; border-radius: 10px; font-size: 0.9rem; margin-right: 8px; margin-bottom: 8px; display: inline-block; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
+        .chip.selected { background: var(--primary); color: #000; border-color: var(--primary); font-weight: 700; box-shadow: 0 0 15px var(--primary-glow); }
 
+        /* --- PERFIL --- */
         .profile-header { text-align: center; margin-bottom: 30px; }
-        .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #222; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; }
+        .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #222; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; box-shadow: 0 0 20px var(--primary-glow); }
         
         .info-btn { 
-            background: var(--bg-card); width: 100%; padding: 15px; 
+            background: var(--bg-card); width: 100%; padding: 16px; 
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border); cursor: pointer; color: #ddd;
             transition: 0.2s;
         }
-        .info-btn:hover { background: rgba(255,255,255,0.05); padding-left: 20px; }
-        .info-btn:first-child { border-top-left-radius: 12px; border-top-right-radius: 12px; }
-        .info-btn:last-child { border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; border-bottom: none; }
-        .info-btn i { color: var(--primary); width: 25px; }
+        .info-btn:active { background: rgba(255,255,255,0.1); }
+        .info-btn:first-child { border-top-left-radius: 16px; border-top-right-radius: 16px; }
+        .info-btn:last-child { border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border-bottom: none; }
+        .info-btn i { color: var(--primary); width: 30px; font-size: 1.1rem; }
 
-        .social-box { background: linear-gradient(45deg, #405DE6, #833AB4); margin-top: 20px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+        .social-box { background: linear-gradient(45deg, #405DE6, #833AB4, #C13584); margin-top: 20px; padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(131, 58, 180, 0.4); }
         .social-box:hover { transform: scale(1.02); }
     </style>
 </head>
@@ -211,8 +240,8 @@
             <img id="loginLogoImg" class="dynamic-logo hidden">
             <div id="loginLogoText" class="logo-text-anim hidden">TOP VENDAS</div>
             
-            <h2 id="loginTitle" style="margin-top:20px;">Bem-vindo</h2>
-            <p id="loginSub" style="color: #bbb;">Faça login para acessar a loja</p>
+            <h2 id="loginTitle" style="margin-top:20px; font-weight:800;">Bem-vindo</h2>
+            <p id="loginSub" style="color: #bbb;">Acesse para ver ofertas exclusivas</p>
         </div>
         
         <div class="login-card" id="authBox">
@@ -226,8 +255,8 @@
             </div>
             
             <button id="authBtn" class="action-btn" onclick="handleAuth()">ENTRAR</button>
-            <p id="toggleAuthMode" style="text-align:center; margin-top:15px; font-size:0.8rem; color:#888; cursor:pointer;">
-                Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>
+            <p id="toggleAuthMode" style="text-align:center; margin-top:20px; font-size:0.9rem; color:#aaa; cursor:pointer;">
+                Não tem conta? <span style="color:var(--primary); font-weight:700;">Cadastre-se</span>
             </p>
         </div>
         
@@ -244,18 +273,19 @@
                     <img id="headerLogo" class="logo-img" src="" alt="Logo">
                     <span id="headerText" class="logo-text">TOP VENDAS</span>
                 </div>
-                <a href="tel:" id="callBtn" style="color:#fff; font-size:1.2rem;"><i class="fa-solid fa-phone"></i></a>
+                <a href="tel:" id="callBtn" style="width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none;"><i class="fa-solid fa-phone"></i></a>
             </header>
 
             <div id="homeView">
                 <div class="search-bar">
                     <i class="fa-solid fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Buscar produtos..." oninput="filterProducts(this.value)">
+                    <input type="text" class="search-input" placeholder="O que procura hoje?" oninput="filterProducts(this.value)">
                 </div>
 
                 <div class="hero-section">
                     <div class="swiper main-swiper">
-                        <div class="swiper-wrapper" id="bannerWrapper"></div>
+                        <div class="swiper-wrapper" id="bannerWrapper">
+                            </div>
                         <div class="swiper-pagination"></div>
                     </div>
                 </div>
@@ -264,18 +294,19 @@
                     <div class="cat-chip active">Todos</div>
                 </div>
 
-                <div class="grid" id="productGrid"></div>
+                <div class="grid" id="productGrid">
+                    </div>
                 <div style="height: 100px;"></div> 
             </div>
 
             <div id="profileView" class="hidden" style="padding: 20px;">
                 <div class="profile-header">
                     <div class="p-avatar" id="uAvatar">U</div>
-                    <h2 id="uNameDisplay">Usuário</h2>
+                    <h2 id="uNameDisplay" style="margin-bottom:5px;">Usuário</h2>
                     <p id="uEmailDisplay" style="color: var(--text-muted); font-size: 0.9rem;">...</p>
                 </div>
 
-                <div style="background:var(--bg-card); border-radius:12px; border:1px solid var(--border); overflow:hidden;">
+                <div style="background:var(--bg-card); border-radius:16px; border:1px solid var(--border); overflow:hidden; margin-bottom:20px;">
                     <div class="info-btn" onclick="downloadApp()">
                         <span><i class="fa fa-cloud-arrow-down"></i> Baixar App</span> <i class="fa fa-chevron-right" style="width:auto; font-size:0.8rem"></i>
                     </div>
@@ -292,14 +323,14 @@
                 </div>
 
                 <div id="socialBtn" class="social-box hidden" onclick="openSocial()">
-                    <i class="fa-brands fa-instagram" style="font-size: 2rem;"></i>
-                    <div>
-                        <div style="font-weight: bold;">Siga-nos</div>
-                        <div style="font-size: 0.8rem; opacity:0.8;">Acompanhe as novidades</div>
+                    <i class="fa-brands fa-instagram" style="font-size: 2rem; color:#fff;"></i>
+                    <div style="color:#fff;">
+                        <div style="font-weight: bold; font-size:1.1rem;">Siga-nos</div>
+                        <div style="font-size: 0.85rem; opacity:0.9;">Acompanhe as novidades</div>
                     </div>
                 </div>
 
-                <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 30px;">Sair da Conta</button>
+                <button class="action-btn" onclick="auth.signOut()" style="background: transparent; border: 1px solid #333; color: #ff4d6d; margin-top: 30px;">SAIR DA CONTA</button>
                 <div style="height: 100px;"></div>
             </div>
 
@@ -313,36 +344,48 @@
 
     <div class="modal" id="prodModal">
         <div class="sheet">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                <h2 id="mName" style="font-size: 1.2rem;">Produto</h2>
-                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+                <h2 id="mName" style="font-size: 1.2rem; max-width:85%;">Produto</h2>
+                <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:5px; cursor:pointer; color:#777;"></i>
             </div>
             <div class="swiper detail-swiper">
                 <div class="swiper-wrapper" id="detailWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
-            <h1 id="mPrice" style="color: var(--primary); margin-bottom: 20px;">0 MT</h1>
-            <div style="margin-bottom: 15px;"><p style="color:#888; font-size:0.8rem; margin-bottom:5px;">TAMANHO</p><div id="mSizes"></div></div>
-            <div style="margin-bottom: 20px;"><p style="color:#888; font-size:0.8rem; margin-bottom:5px;">COR / VARIAÇÃO</p><div id="mColors"></div></div>
+            <h1 id="mPrice" style="color: var(--primary); margin-bottom: 20px; font-size:1.8rem;">0 MT</h1>
+            <div style="margin-bottom: 15px;"><p style="color:#888; font-size:0.8rem; margin-bottom:8px; font-weight:700; letter-spacing:1px;">TAMANHO</p><div id="mSizes"></div></div>
+            <div style="margin-bottom: 25px;"><p style="color:#888; font-size:0.8rem; margin-bottom:8px; font-weight:700; letter-spacing:1px;">COR / VARIAÇÃO</p><div id="mColors"></div></div>
             <button class="action-btn" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
         </div>
     </div>
 
     <div class="modal" id="cartModal">
         <div class="sheet">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2>Seu Carrinho</h2><i class="fa fa-times" onclick="closeModal('cartModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i></div>
-            <div id="cartList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;"></div>
-            <div style="background: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; display:flex; justify-content:space-between;"><b>TOTAL</b> <b id="cartTotal" style="color: var(--primary);">0 MT</b></div>
-            <input type="text" id="cAddr" class="nice-input" placeholder="Endereço (Bairro/Rua)">
-            <select id="cPay" class="nice-input"><option value="M-Pesa">M-Pesa</option><option value="E-mola">E-mola</option><option value="Numerário">Numerário</option></select>
-            <button class="action-btn" style="background:#25D366; color:#fff;" onclick="checkout()"><i class="fa-brands fa-whatsapp"></i> PEDIR NO WHATSAPP</button>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+                <h2>Seu Carrinho</h2>
+                <i class="fa fa-times" onclick="closeModal('cartModal')" style="font-size:1.5rem; padding:5px; cursor:pointer; color:#777;"></i>
+            </div>
+            <div id="cartList" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px; padding-right:5px;"></div>
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);">
+                <span style="color:#ccc;">Total a Pagar</span> 
+                <b id="cartTotal" style="color: var(--primary); font-size:1.4rem;">0 MT</b>
+            </div>
+            <input type="text" id="cAddr" class="nice-input" placeholder="Endereço de Entrega (Bairro/Rua)">
+            <select id="cPay" class="nice-input">
+                <option value="M-Pesa">M-Pesa</option>
+                <option value="E-mola">E-mola</option>
+                <option value="Numerário">Numerário</option>
+            </select>
+            <button class="action-btn" style="background:#25D366; color:#fff; box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);" onclick="checkout()">
+                <i class="fa-brands fa-whatsapp"></i> FINALIZAR PEDIDO
+            </button>
         </div>
     </div>
 
     <div class="modal" id="infoModal">
         <div class="sheet">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><h2 id="infoTitle">Informação</h2><i class="fa fa-times" onclick="closeModal('infoModal')" style="font-size:1.5rem; padding:10px; cursor:pointer;"></i></div>
-            <div id="infoContent" style="color: #ccc; line-height: 1.6; white-space: pre-wrap;"></div>
+            <div id="infoContent" style="color: #ccc; line-height: 1.6; white-space: pre-wrap; font-size:0.95rem;"></div>
         </div>
     </div>
 
@@ -368,6 +411,8 @@
 
         let products = [], cart = [], currentProd = null, selections = {}, waNumber = "25800000000";
         let isLoginMode = true;
+        let bannerSwiper = null;
+
         window.storeAbout = "Sem informações.";
         window.storeDelivery = "Sem informações.";
         window.socialLink = "";
@@ -411,13 +456,18 @@
             if(!email) return showToast("Digite seu e-mail");
             if(pass.length < 6) return showToast("Senha curta (min 6)");
             
+            const btn = document.getElementById('authBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "A PROCESSAR...";
+            btn.disabled = true;
+
             try {
                 if (isLoginMode) {
                     await signInWithEmailAndPassword(auth, email, pass);
                 } else {
                     const name = document.getElementById('regName').value;
                     const phone = document.getElementById('regPhone').value;
-                    if(!name || !phone) return showToast("Preencha Nome e Celular!");
+                    if(!name || !phone) throw new Error("Preencha Nome e Celular!");
 
                     const cred = await createUserWithEmailAndPassword(auth, email, pass);
                     await setDoc(doc(db, "users", cred.user.uid), { 
@@ -426,11 +476,13 @@
                 }
             } catch (e) { 
                 console.error(e);
-                let msg = "Erro ao processar";
+                let msg = e.message;
                 if(e.code === 'auth/email-already-in-use') msg = "E-mail já cadastrado";
                 if(e.code === 'auth/wrong-password') msg = "Senha incorreta";
                 if(e.code === 'auth/user-not-found') msg = "Usuário não encontrado";
                 showToast(msg); 
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         };
 
@@ -440,20 +492,24 @@
             const phoneInput = document.getElementById('regPhone');
             const btn = document.getElementById('authBtn');
             const toggleTxt = document.getElementById('toggleAuthMode');
+            const title = document.getElementById('loginTitle');
 
             if (isLoginMode) {
                 nameInput.classList.add('hidden');
                 phoneInput.classList.add('hidden');
                 btn.innerText = 'ENTRAR';
-                toggleTxt.innerHTML = 'Não tem conta? <span style="color:var(--primary)">Cadastre-se</span>';
+                title.innerText = "Bem-vindo";
+                toggleTxt.innerHTML = 'Não tem conta? <span style="color:var(--primary); font-weight:700;">Cadastre-se</span>';
             } else {
                 nameInput.classList.remove('hidden');
                 phoneInput.classList.remove('hidden');
                 btn.innerText = 'CADASTRAR';
-                toggleTxt.innerHTML = 'Já tem conta? <span style="color:var(--primary)">Entrar</span>';
+                title.innerText = "Criar Conta";
+                toggleTxt.innerHTML = 'Já tem conta? <span style="color:var(--primary); font-weight:700;">Entrar</span>';
             }
         };
 
+        // --- DADOS DA LOJA ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
@@ -478,20 +534,36 @@
             }
         });
 
-        window.downloadApp = () => { window.appDownloadLink && window.appDownloadLink.length > 5 ? window.open(window.appDownloadLink, '_blank') : showToast("Link indisponível no momento."); };
-        window.openSocial = () => { window.socialLink && window.socialLink.length > 5 ? window.open(window.socialLink, '_blank') : showToast("Rede social não configurada."); };
-
+        // --- BANNERS INTELIGENTES COM FUNÇÃO GIF ---
         onSnapshot(collection(db, "banners"), (snap) => {
-            document.getElementById('bannerWrapper').innerHTML = snap.docs.map(d => {
+            const wrapper = document.getElementById('bannerWrapper');
+            wrapper.innerHTML = snap.docs.map(d => {
                 const b = d.data();
+                // Detecção: Se tiver type='video' ou a URL for .mp4, tratamos como GIF (autoplay, loop, muted)
+                const isVideo = b.type === 'video' || (b.url && b.url.includes('.mp4'));
                 const clickAction = b.targetLink ? `onclick="window.open('${b.targetLink}', '_blank')"` : '';
-                return `<div class="swiper-slide" ${clickAction}>
-                    ${b.type === 'video' ? `<video src="${b.url}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${b.url}">`}
-                </div>`;
+                
+                if (isVideo) {
+                    return `<div class="swiper-slide" data-type="video" ${clickAction}>
+                        <video src="${b.url}" autoplay loop muted playsinline webkit-playsinline style="width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+                    </div>`;
+                } else {
+                    return `<div class="swiper-slide" data-type="image" ${clickAction}>
+                        <img src="${b.url}" loading="lazy">
+                    </div>`;
+                }
             }).join('');
-            new Swiper('.main-swiper', { loop: true, autoplay: true, pagination: { el: '.swiper-pagination' }, slidesPerView: 1 });
+
+            if (bannerSwiper) bannerSwiper.destroy();
+            
+            bannerSwiper = new Swiper('.main-swiper', { 
+                loop: true, 
+                pagination: { el: '.swiper-pagination' },
+                autoplay: { delay: 5000, disableOnInteraction: false }
+            });
         });
 
+        // --- PRODUTOS ---
         onSnapshot(collection(db, "categories"), (snap) => {
             let h = `<div class="cat-chip active" onclick="setCategory('todos', this)">Todos</div>`;
             snap.docs.forEach(d => h += `<div class="cat-chip" onclick="setCategory('${d.data().id}', this)">${d.data().name}</div>`);
@@ -503,52 +575,53 @@
             renderProducts(products);
         });
 
-        // --- RENDERIZAÇÃO INTELIGENTE COM ÍCONES ---
         window.renderProducts = (list) => {
             const oneDay = 24 * 60 * 60 * 1000;
-            document.getElementById('productGrid').innerHTML = list.map(p => {
+            let delay = 0;
+
+            document.getElementById('productGrid').innerHTML = list.map((p, index) => {
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
                 
                 const nameLower = p.name.toLowerCase();
-                const isLove = nameLower.includes('love') || (p.cat && p.cat.toLowerCase().includes('love'));
+                const catLower = p.cat ? p.cat.toLowerCase() : "";
                 
-                // Lógica de Ícones Especiais
+                // --- LÓGICA DE ANIMAÇÕES E TEMAS ---
+                // Tema Valentine/Love
+                const isLove = nameLower.includes('love') || catLower.includes('love') || nameLower.includes('namorad');
+                
+                // Ícones Especiais
                 let specialIcon = '';
-                if (nameLower.includes('celular') || nameLower.includes('telefone')) {
-                    specialIcon = `<div class="special-icon-box anim-vibrate-infinite"><i class="fa-solid fa-mobile-screen-button"></i></div>`;
-                } else if (nameLower.includes('camisa')) {
-                    specialIcon = `<div class="special-icon-box"><i class="fa-solid fa-shirt"></i></div>`;
-                } else if (nameLower.includes('sapato') || nameLower.includes('tênis')) {
-                    specialIcon = `<div class="special-icon-box"><i class="fa-solid fa-shoe-prints"></i></div>`;
-                }
-
-                // Estilos Love
                 let cardStyle = "";
-                let animDecors = "";
-                if(isLove) {
-                    cardStyle = "background: linear-gradient(135deg, #e91e63, #ff4d6d); border: 1px solid #ff8fa3;";
-                    animDecors = `
-                        <div style="position:absolute; top:10px; right:10px; z-index:12; color:#fff; animation:heartBeat 1.5s infinite;">
-                            <i class="fa-solid fa-heart" style="font-size:1.2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3));"></i>
-                        </div>
-                        <div style="position:absolute; bottom:55px; right:10px; z-index:12; color:#fff; animation:floatFlower 3s infinite ease-in-out;">
-                            <i class="fa-solid fa-spa" style="font-size:1.4rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.3));"></i>
-                        </div>
+                let extraHtml = "";
+
+                if (isLove) {
+                    // Estilo LOVE: Fundo especial e ícones animados
+                    cardStyle = "background: linear-gradient(135deg, #a4133c, #ff4d6d); border: 1px solid #ff8fa3;";
+                    extraHtml = `
+                        <div class="love-icon"><i class="fa-solid fa-heart"></i></div>
+                        <div class="flower-icon"><i class="fa-solid fa-spa"></i></div>
                     `;
-                    // Se for love, o ícone de coração prevalece sobre os outros, ou removemos a linha abaixo se quiser os dois.
-                    // Vou manter a prioridade do ícone especial se ele existir, senão o coração.
-                    if (specialIcon) animDecors = ''; 
+                } else if (nameLower.includes('celular') || nameLower.includes('iphone') || nameLower.includes('samsung')) {
+                    specialIcon = `<div class="special-icon-box anim-vibrate"><i class="fa-solid fa-mobile-screen-button"></i></div>`;
+                } else if (nameLower.includes('relogio') || nameLower.includes('watch')) {
+                    specialIcon = `<div class="special-icon-box"><i class="fa-solid fa-clock"></i></div>`;
+                } else if (nameLower.includes('fone')) {
+                    specialIcon = `<div class="special-icon-box anim-vibrate"><i class="fa-solid fa-headphones"></i></div>`;
                 }
 
-                return `<div class="card" onclick="openProduct('${p.id}')" style="${cardStyle}">
+                // Animação de entrada escalonada
+                const animStyle = `animation-delay: ${index * 0.05}s`;
+
+                return `<div class="card fade-in-up" onclick="openProduct('${p.id}')" style="${cardStyle}; ${animStyle}">
                     ${isNew ? '<div class="badge-new">NOVO</div>' : ''}
-                    ${specialIcon ? specialIcon : animDecors}
-                    <div class="img-box"><img src="${p.img}"></div>
+                    ${extraHtml}
+                    ${specialIcon}
+                    <div class="img-box"><img src="${p.img}" loading="lazy"></div>
                     <div class="p-details">
                         <div class="p-title">${p.name}</div>
                         <div class="p-footer">
                             <div class="p-price">${Number(p.price).toLocaleString()} MT</div> 
-                            <i class="fa fa-plus-circle" style="color:${isLove ? '#fff' : 'var(--primary)'}"></i>
+                            <i class="fa fa-plus-circle" style="font-size:1.2rem; color:${isLove ? '#fff' : 'var(--primary)'}"></i>
                         </div>
                     </div>
                 </div>`;
@@ -563,16 +636,34 @@
 
         window.filterProducts = (v) => renderProducts(products.filter(p => p.name.toLowerCase().includes(v.toLowerCase())));
 
+        // --- UTILITÁRIOS E MODAIS ---
         window.openProduct = (id) => {
             currentProd = products.find(p => p.id === id);
             selections = { size: '', color: '' };
             const imgs = currentProd.images?.length ? currentProd.images : [currentProd.img];
-            document.getElementById('detailWrapper').innerHTML = imgs.map(url => `<div class="swiper-slide"><img src="${url}"></div>`).join('');
+            
+            document.getElementById('detailWrapper').innerHTML = imgs.map(url => {
+                 // Verificação simples se é video na galeria também
+                 if(url.includes('.mp4')) return `<div class="swiper-slide"><video src="${url}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:contain"></video></div>`;
+                 return `<div class="swiper-slide"><img src="${url}"></div>`
+            }).join('');
+            
             new Swiper('.detail-swiper', { pagination: { el: '.swiper-pagination' } });
+            
             document.getElementById('mName').innerText = currentProd.name;
             document.getElementById('mPrice').innerText = Number(currentProd.price).toLocaleString() + " MT";
-            document.getElementById('mSizes').innerHTML = (currentProd.sizes || ['Único']).map(s => `<div class="chip" onclick="sel('size', '${s}', this)">${s}</div>`).join('');
-            document.getElementById('mColors').innerHTML = (currentProd.colors || ['Padrão']).map(c => `<div class="chip" onclick="sel('color', '${c}', this)">${c}</div>`).join('');
+            
+            // Renderização de tamanhos com verificação de array
+            const sizes = currentProd.sizes || ['Único'];
+            document.getElementById('mSizes').innerHTML = sizes.map(s => `<div class="chip" onclick="sel('size', '${s}', this)">${s}</div>`).join('');
+            
+            const colors = currentProd.colors || ['Padrão'];
+            document.getElementById('mColors').innerHTML = colors.map(c => `<div class="chip" onclick="sel('color', '${c}', this)">${c}</div>`).join('');
+            
+            // Auto-selecionar se só tiver 1 opção
+            if(sizes.length === 1) sel('size', sizes[0], document.querySelector('#mSizes .chip'));
+            if(colors.length === 1) sel('color', colors[0], document.querySelector('#mColors .chip'));
+
             document.getElementById('prodModal').classList.add('open');
         };
 
@@ -585,11 +676,28 @@
             if(!selections.size || !selections.color) return showToast("Escolha cor e tamanho!");
             cart.push({ ...currentProd, ...selections, cid: Date.now() });
             document.getElementById('cartCount').innerText = cart.length;
-            closeModal('prodModal'); showToast("Adicionado!");
+            closeModal('prodModal'); showToast("Adicionado ao carrinho!");
         };
 
         window.openCart = () => {
-            document.getElementById('cartList').innerHTML = cart.length ? cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div>${i.name}<br><small>${i.size} | ${i.color}</small></div><div>${Number(i.price).toLocaleString()} <i class="fa fa-trash" style="color:red; cursor:pointer;" onclick="remItem(${i.cid})"></i></div></div>`).join('') : 'Carrinho Vazio';
+            const list = document.getElementById('cartList');
+            if(cart.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:30px; color:#666;"><i class="fa fa-basket-shopping" style="font-size:3rem; margin-bottom:10px;"></i><br>Seu carrinho está vazio</div>`;
+            } else {
+                list.innerHTML = cart.map(i => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid var(--border);">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <img src="${i.img}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                            <div>
+                                <div style="font-weight:600; font-size:0.9rem;">${i.name}</div>
+                                <div style="font-size:0.75rem; color:#888;">${i.size} | ${i.color}</div>
+                                <div style="color:var(--primary); font-weight:700;">${Number(i.price).toLocaleString()} MT</div>
+                            </div>
+                        </div>
+                        <i class="fa fa-trash-can" style="color:#ff4d6d; cursor:pointer; padding:10px;" onclick="remItem(${i.cid})"></i>
+                    </div>
+                `).join('');
+            }
             document.getElementById('cartTotal').innerText = cart.reduce((a, b) => a + Number(b.price), 0).toLocaleString() + " MT";
             document.getElementById('cartModal').classList.add('open');
         };
@@ -598,28 +706,66 @@
 
         window.checkout = async () => {
             const addr = document.getElementById('cAddr').value;
-            if(!addr || !cart.length) return showToast("Dados incompletos!");
+            const pay = document.getElementById('cPay').value;
+            
+            if(!addr || !cart.length) return showToast("Preencha o endereço!");
+            
             const u = auth.currentUser;
             const snap = await getDoc(doc(db, "users", u.uid));
             const ud = snap.data();
             const total = cart.reduce((a, b) => a + Number(b.price), 0);
-            await addDoc(collection(db, "orders"), { uid: u.uid, userName: ud.name, items: cart, total, status: 'pending', date: Date.now() });
-            let msg = `*NOVO PEDIDO*%0A👤 ${ud.name}%0A📍 ${addr}%0A*TOTAL: ${total.toLocaleString()} MT*`;
+            
+            // Salvar pedido no Firebase
+            await addDoc(collection(db, "orders"), { 
+                uid: u.uid, 
+                userName: ud.name, 
+                userPhone: ud.phone,
+                items: cart, 
+                address: addr,
+                payment: pay,
+                total, 
+                status: 'pending', 
+                date: Date.now() 
+            });
+            
+            // Gerar mensagem WhatsApp
+            let itemsList = cart.map(c => `- ${c.name} (${c.size}/${c.color})`).join('%0A');
+            let msg = `*NOVO PEDIDO (APP)*%0A%0A👤 *Cliente:* ${ud.name}%0A📱 *Tel:* ${ud.phone}%0A📍 *Endereço:* ${addr}%0A💳 *Pagamento:* ${pay}%0A%0A📦 *ITENS:*%0A${itemsList}%0A%0A💰 *TOTAL: ${total.toLocaleString()} MT*`;
+            
             window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-            cart = []; document.getElementById('cartCount').innerText = 0; closeModal('cartModal');
+            
+            cart = []; 
+            document.getElementById('cartCount').innerText = 0; 
+            closeModal('cartModal');
+            showToast("Pedido enviado!");
         };
 
         window.switchView = (v, btn) => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById('homeView').classList.toggle('hidden', v !== 'home');
-            document.getElementById('profileView').classList.toggle('hidden', v !== 'profile');
+            
+            if(v === 'home') {
+                document.getElementById('homeView').classList.remove('hidden');
+                document.getElementById('profileView').classList.add('hidden');
+            } else {
+                document.getElementById('homeView').classList.add('hidden');
+                document.getElementById('profileView').classList.remove('hidden');
+            }
         };
+        
+        window.downloadApp = () => { window.appDownloadLink && window.appDownloadLink.length > 5 ? window.open(window.appDownloadLink, '_blank') : showToast("Link indisponível."); };
+        window.openSocial = () => { window.socialLink && window.socialLink.length > 5 ? window.open(window.socialLink, '_blank') : showToast("Instagram não configurado."); };
         window.closeModal = (id) => document.getElementById(id).classList.remove('open');
         window.openTextModal = (title, content) => { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = content; document.getElementById('infoModal').classList.add('open'); };
         window.showToast = (msg) => { const t = document.getElementById('toast'); t.querySelector('span').innerText = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 3000); };
         window.togglePassView = () => { const input = document.getElementById('regPass'); input.type = input.type === 'password' ? 'text' : 'password'; };
-        window.resetPass = () => { if(auth.currentUser) sendPasswordResetEmail(auth, auth.currentUser.email).then(() => showToast("E-mail de redefinição enviado!")); };
+        window.resetPass = () => { 
+            if(auth.currentUser) {
+                sendPasswordResetEmail(auth, auth.currentUser.email)
+                .then(() => showToast("Verifique seu e-mail!"))
+                .catch(e => showToast("Erro ao enviar e-mail"));
+            }
+        };
     </script>
 </body>
 </html>
