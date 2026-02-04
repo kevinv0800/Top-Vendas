@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            /* --- PALETA DE CORES: Midnight Blue & Sky --- */
+            /* --- PALETA DE CORES --- */
             --bg-dark: #0f172a; 
             --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
             --bg-card: rgba(30, 41, 59, 0.9);
@@ -19,6 +19,8 @@
             --primary: #38bdf8; 
             --primary-glow: rgba(56, 189, 248, 0.3);
             --accent: #818cf8; 
+            --promo: #fbbf24; /* Cor para promoções (Dourado/Amarelo) */
+            --danger: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.1);
@@ -37,11 +39,23 @@
         }
         
         /* Utilitários */
-        .app-container { max-width: 1200px; margin: 0 auto; position: relative; }
+        .app-container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
         .hidden { display: none !important; }
         .fade-in-up { animation: fadeInUp 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
         
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ANIMAÇÕES FESTIVAS (Particles) --- */
+        #festive-container {
+            position: fixed; inset: 0; pointer-events: none; z-index: 5; overflow: hidden;
+        }
+        .particle {
+            position: absolute; top: -10px;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(720deg); }
+        }
 
         /* --- TELA DE LOGIN --- */
         #loginView { 
@@ -56,10 +70,7 @@
         }
 
         .dynamic-logo { max-width: 140px; max-height: 140px; object-fit: contain; margin-bottom: 20px; animation: pulseLogo 2s infinite ease-in-out; display: block; margin-left: auto; margin-right: auto; }
-        .logo-text-anim { 
-            font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 10px;
-            color: #fff; letter-spacing: -1px;
-        }
+        .logo-text-anim { font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 10px; color: #fff; letter-spacing: -1px; }
         
         .login-card { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 24px; border: 1px solid var(--border); backdrop-filter: blur(20px); width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
         .nice-input { width: 100%; padding: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none; transition: 0.3s; font-size: 1rem; }
@@ -114,13 +125,9 @@
         /* --- BANNER --- */
         .hero-section { padding: 0 20px 10px; }
         .main-swiper { 
-            border-radius: var(--radius); 
-            width: 100%;
-            aspect-ratio: 16/9; 
-            border: 1px solid var(--border); 
-            position: relative; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            background: #000;
+            border-radius: var(--radius); width: 100%; aspect-ratio: 16/9; 
+            border: 1px solid var(--border); position: relative; overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #000;
         }
         .main-swiper img, .main-swiper video { width: 100%; height: 100%; object-fit: cover; }
         
@@ -129,7 +136,7 @@
         @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
         
         .card { 
-            background: var(--bg-card); border-radius: var(--radius); overflow: visible;
+            background: var(--bg-card); border-radius: var(--radius); overflow: hidden;
             border: 1px solid var(--border); position: relative; transition: all 0.3s; 
             backdrop-filter: var(--bg-card-blur); display: flex; flex-direction: column;
         }
@@ -137,49 +144,31 @@
         
         .img-container-card {
             width: 100%; aspect-ratio: 1/1; position: relative; overflow: hidden;
-            border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);
             background: rgba(0,0,0,0.2);
         }
         .img-container-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
         
         .p-details { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .p-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 5px; color: #e2e8f0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .p-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .p-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
+        
+        /* Preços e Promoções */
+        .price-box { display: flex; flex-direction: column; }
         .p-price { font-size: 1rem; font-weight: 700; color: #fff; }
+        .p-old-price { font-size: 0.75rem; text-decoration: line-through; color: var(--text-muted); margin-bottom: 2px; }
+        .p-promo-price { color: var(--promo); font-size: 1.1rem; font-weight: 800; }
 
-        .badge-new { 
-            position: absolute; top: 10px; left: 10px; z-index: 10; 
-            background: var(--primary); color: #000; font-size: 0.65rem; font-weight: 800; 
-            padding: 4px 8px; border-radius: 6px; 
-            animation: pulse 2s infinite; 
+        .badge-new { position: absolute; top: 10px; left: 10px; z-index: 10; background: var(--primary); color: #000; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
+        .badge-promo { 
+            position: absolute; top: 10px; right: 10px; z-index: 10; 
+            background: var(--danger); color: #fff; font-size: 0.65rem; font-weight: 800; 
+            padding: 4px 8px; border-radius: 6px; animation: pulse 2s infinite; 
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
         }
 
         /* --- ANIMAÇÕES E ÍCONES FLUTUANTES --- */
         @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
         @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        .float-icon-box {
-            position: absolute; top: -10px; right: -5px; z-index: 15;
-            width: 35px; height: 35px; 
-            background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: var(--primary); font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .love-icon-box {
-            background: linear-gradient(135deg, #be185d, #ec4899);
-            border-color: #fbcfe8; 
-            width: auto; 
-            padding: 0 10px;
-            border-radius: 20px;
-            color: #fff;
-            gap: 5px; 
-            animation: float 2.5s ease-in-out infinite alternate;
-        }
-        .love-icon-box i { color: #fff; font-size: 0.9rem; }
 
         /* --- NAVEGAÇÃO --- */
         .bottom-nav { 
@@ -201,37 +190,25 @@
         .sheet { width: 100%; max-width: 500px; background: #0f172a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
         .modal.open .sheet { transform: translateY(0); }
         
-        .detail-swiper { 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            border-radius: 16px; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--border); 
-            background: rgba(255,255,255,0.02); 
-        }
+        .detail-swiper { width: 100%; aspect-ratio: 1/1; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); }
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; } 
         
         .chip { padding: 10px 18px; border: 1px solid #334155; border-radius: 10px; font-size: 0.9rem; margin-right: 8px; margin-bottom: 8px; display: inline-block; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
         .chip.selected { background: var(--primary); color: #0f172a; border-color: var(--primary); font-weight: 700; }
 
+        .desc-box { margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; max-height: 150px; overflow-y: auto; white-space: pre-wrap; }
+
         /* --- PERFIL --- */
         .profile-header { text-align: center; margin-bottom: 30px; }
         .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #1e293b; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; }
-        
-        .info-btn { 
-            background: rgba(255,255,255,0.03); width: 100%; padding: 16px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border); cursor: pointer; color: #cbd5e1;
-            transition: 0.2s;
-        }
-        .info-btn i { color: var(--primary); width: 30px; font-size: 1.1rem; }
-
+        .info-btn { background: rgba(255,255,255,0.03); width: 100%; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); cursor: pointer; color: #cbd5e1; transition: 0.2s; }
         .social-box { background: linear-gradient(45deg, #833AB4, #C13584); margin-top: 15px; padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
-        /* Box específica para Facebook */
         .social-box.facebook { background: linear-gradient(45deg, #1877F2, #3b5998); }
     </style>
 </head>
 <body>
+
+    <div id="festive-container"></div>
 
     <div id="toast"><i class="fa fa-info-circle"></i> <span>Aviso</span></div>
 
@@ -282,9 +259,6 @@
                     <div class="search-wrapper">
                         <i class="fa-solid fa-magnifying-glass search-icon"></i>
                         <input type="text" class="search-input" placeholder="Buscar produtos..." oninput="filterProducts(this.value)">
-                        <div class="search-filter-icon">
-                            <i class="fa-solid fa-filter"></i>
-                        </div>
                     </div>
                 </div>
 
@@ -364,8 +338,11 @@
                 <div class="swiper-wrapper" id="detailWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
-            <h1 id="mPrice" style="color: var(--primary); margin-bottom: 20px; font-size:1.8rem;">0 MT</h1>
             
+            <div id="mPriceContainer" style="margin-bottom: 20px;"></div>
+            
+            <div id="mDescContainer" class="desc-box hidden"></div>
+
             <div id="sizeContainer" style="margin-bottom: 15px;">
                 <p style="color:#64748b; font-size:0.8rem; margin-bottom:8px; font-weight:700; letter-spacing:1px;">TAMANHO</p>
                 <div id="mSizes"></div>
@@ -416,7 +393,6 @@
         import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // CONFIGURAÇÃO FIREBASE (Não altere se estiver funcionando)
         const firebaseConfig = {
             apiKey: "AIzaSyAPKEeQwU3vsNqWyLjgb7czsk_8-wzPfPo",
             authDomain: "criador-6da7a.firebaseapp.com",
@@ -434,6 +410,7 @@
         let products = [], cart = [], currentProd = null, selections = {}, waNumber = "";
         let isLoginMode = true;
         let bannerSwiper = null;
+        let currentEffect = 'none';
 
         // Variáveis Globais de Configuração
         window.storeAbout = "Sem informações.";
@@ -533,45 +510,67 @@
             }
         };
 
-        // --- SINCRONIZAÇÃO EM TEMPO REAL COM O PAINEL ---
-        // Aqui garantimos que tudo o que o painel manda (Logo, Links, Textos) é respeitado.
+        // --- SISTEMA DE ANIMAÇÕES FESTIVAS ---
+        const startAnimation = (type) => {
+            const container = document.getElementById('festive-container');
+            container.innerHTML = '';
+            currentEffect = type;
+            
+            if(type === 'none') return;
+
+            const colors = type === 'confetti' ? ['#ef4444', '#3b82f6', '#22c55e', '#eab308'] :
+                           type === 'gold' ? ['#fbbf24', '#f59e0b', '#fff'] : ['#fff'];
+            
+            const shapes = type === 'snow' ? '50%' : '0%'; // Redondo para neve, quadrado para outros
+            const count = 30; // Quantidade de partículas
+
+            for(let i=0; i<count; i++) {
+                const el = document.createElement('div');
+                el.classList.add('particle');
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.width = Math.random() * 8 + 5 + 'px';
+                el.style.height = el.style.width;
+                el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                el.style.borderRadius = shapes;
+                el.style.animationDuration = Math.random() * 3 + 2 + 's';
+                el.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(el);
+            }
+        };
+
+        // --- SINCRONIZAÇÃO EM TEMPO REAL ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
                 
-                // WhatsApp
+                // Configs Gerais
                 waNumber = d.whatsapp || "";
-
-                // Links Sociais e App
                 window.appDownloadLink = d.appLink || "";
-                
                 window.socialLink = d.social || "";
                 d.social ? document.getElementById('socialBtn').classList.remove('hidden') : document.getElementById('socialBtn').classList.add('hidden');
-
                 window.facebookLink = d.facebook || "";
                 d.facebook ? document.getElementById('facebookBtn').classList.remove('hidden') : document.getElementById('facebookBtn').classList.add('hidden');
 
-                // Textos Informativos
                 if(d.aboutText) window.storeAbout = d.aboutText;
                 if(d.deliveryText) window.storeDelivery = d.deliveryText;
                 
-                // Sincronização da Logo
+                // Configs da Logo
                 const logoImgs = [document.getElementById('headerLogo'), document.getElementById('loginLogoImg')];
                 const logoTxts = [document.getElementById('headerText'), document.getElementById('loginLogoText')];
                 
                 if(d.logo && d.logo.length > 5) {
-                    logoImgs.forEach(img => { 
-                        img.src = d.logo; 
-                        img.classList.remove('hidden'); 
-                        img.style.display = 'block'; 
-                    });
+                    logoImgs.forEach(img => { img.src = d.logo; img.classList.remove('hidden'); img.style.display = 'block'; });
                     logoTxts.forEach(txt => txt.classList.add('hidden'));
                 } else {
-                    logoImgs.forEach(img => {
-                         img.classList.add('hidden'); 
-                         img.style.display = 'none';
-                    });
+                    logoImgs.forEach(img => { img.classList.add('hidden'); img.style.display = 'none'; });
                     logoTxts.forEach(txt => txt.classList.remove('hidden'));
+                }
+
+                // Configs de Animação Festiva
+                if(d.promoActive && d.promoEffect) {
+                    startAnimation(d.promoEffect);
+                } else {
+                    startAnimation('none');
                 }
             }
         });
@@ -583,34 +582,30 @@
                 const b = d.data();
                 const isVideo = b.type === 'video' || (b.url && b.url.includes('.mp4'));
                 const clickAction = b.targetLink ? `onclick="window.open('${b.targetLink}', '_blank')"` : '';
-                
-                if (isVideo) {
-                    return `<div class="swiper-slide" data-type="video" ${clickAction}>
-                        <video src="${b.url}" autoplay loop muted playsinline webkit-playsinline style="width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
-                    </div>`;
-                } else {
-                    return `<div class="swiper-slide" data-type="image" ${clickAction}>
-                        <img src="${b.url}" loading="lazy">
-                    </div>`;
-                }
+                return `<div class="swiper-slide" ${clickAction}>${isVideo ? `<video src="${b.url}" autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${b.url}">`}</div>`;
             }).join('');
 
             if (bannerSwiper) bannerSwiper.destroy();
-            bannerSwiper = new Swiper('.main-swiper', { 
-                loop: true, 
-                pagination: { el: '.swiper-pagination' },
-                autoplay: { delay: 5000, disableOnInteraction: false }
-            });
+            bannerSwiper = new Swiper('.main-swiper', { loop: true, pagination: { el: '.swiper-pagination' }, autoplay: { delay: 5000, disableOnInteraction: false } });
         });
 
-        // --- CATEGORIAS ---
+        // --- HELPER: CHECK PROMO ---
+        const checkPromo = (p) => {
+            if (p.promoPrice > 0 && p.promoValid) {
+                if (new Date(p.promoValid) > new Date()) {
+                    return { active: true, price: p.promoPrice, old: p.price };
+                }
+            }
+            return { active: false, price: p.price, old: null };
+        };
+
+        // --- PRODUTOS ---
         const getCatIcon = (name) => {
             const n = name.toLowerCase();
             if(n.includes('camisa') || n.includes('shirt')) return '<i class="fa-solid fa-shirt"></i>';
-            if(n.includes('calçado') || n.includes('tenis') || n.includes('sapato')) return '<i class="fa-solid fa-shoe-prints"></i>';
-            if(n.includes('vestido')) return '<i class="fa-solid fa-person-dress"></i>';
+            if(n.includes('calçado') || n.includes('tenis')) return '<i class="fa-solid fa-shoe-prints"></i>';
             if(n.includes('relogio')) return '<i class="fa-solid fa-clock"></i>';
-            if(n.includes('tech') || n.includes('celular') || n.includes('fone')) return '<i class="fa-solid fa-mobile-screen"></i>';
+            if(n.includes('celular') || n.includes('tech')) return '<i class="fa-solid fa-mobile-screen"></i>';
             return '<i class="fa-solid fa-tag"></i>'; 
         };
 
@@ -623,7 +618,6 @@
             document.getElementById('catListDisplay').innerHTML = h;
         });
 
-        // --- PRODUTOS ---
         onSnapshot(collection(db, "products"), (snap) => {
             products = snap.docs.map(d => ({id: d.id, ...d.data()}));
             renderProducts(products);
@@ -631,34 +625,36 @@
 
         window.renderProducts = (list) => {
             const oneDay = 24 * 60 * 60 * 1000;
-            
             document.getElementById('productGrid').innerHTML = list.map((p, index) => {
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
-                const nameLower = p.name.toLowerCase();
-                const catLower = p.cat ? p.cat.toLowerCase() : "";
-                
-                // Ícones dinâmicos baseados no nome do produto
-                let floatIconHtml = "";
-                if (nameLower.includes('love') || catLower.includes('love') || nameLower.includes('namorad')) {
-                    floatIconHtml = `<div class="float-icon-box love-icon-box"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-rose"></i></div>`;
-                } else if (nameLower.includes('celular') || nameLower.includes('iphone') || nameLower.includes('tec') || nameLower.includes('fone')) {
-                    floatIconHtml = `<div class="float-icon-box" style="animation-delay: 0.5s"><i class="fa-solid fa-bolt"></i></div>`;
-                } else if (nameLower.includes('tenis') || nameLower.includes('sapato')) {
-                    floatIconHtml = `<div class="float-icon-box" style="animation-delay: 0.2s"><i class="fa-solid fa-fire"></i></div>`;
-                } else {
-                    floatIconHtml = `<div class="float-icon-box" style="animation-delay: ${Math.random()}s"><i class="fa-solid fa-bag-shopping"></i></div>`;
-                }
-
+                const promo = checkPromo(p);
                 const animDelay = index * 0.05;
 
+                // Badge de Promoção vs Novo
+                let badgeHtml = '';
+                if (promo.active) badgeHtml = '<div class="badge-promo">PROMO</div>';
+                else if (isNew) badgeHtml = '<div class="badge-new">NOVO</div>';
+
+                // Renderização do Preço
+                let priceHtml = '';
+                if(promo.active) {
+                    priceHtml = `
+                        <div class="price-box">
+                            <span class="p-old-price">${Number(promo.old).toLocaleString()} MT</span>
+                            <span class="p-promo-price">${Number(promo.price).toLocaleString()} MT</span>
+                        </div>
+                    `;
+                } else {
+                    priceHtml = `<div class="p-price">${Number(p.price).toLocaleString()} MT</div>`;
+                }
+
                 return `<div class="card fade-in-up" onclick="openProduct('${p.id}')" style="animation-delay: ${animDelay}s;">
-                    ${isNew ? '<div class="badge-new">NOVO</div>' : ''}
-                    ${floatIconHtml}
+                    ${badgeHtml}
                     <div class="img-container-card"><img src="${p.img}" loading="lazy"></div>
                     <div class="p-details">
                         <div class="p-title">${p.name}</div>
                         <div class="p-footer">
-                            <div class="p-price">${Number(p.price).toLocaleString()} MT</div> 
+                            ${priceHtml}
                             <i class="fa fa-circle-plus" style="font-size:1.4rem; color:var(--primary); filter: drop-shadow(0 0 5px var(--primary-glow));"></i>
                         </div>
                     </div>
@@ -671,7 +667,6 @@
             el.classList.add('active');
             renderProducts(cat === 'todos' ? products : products.filter(p => p.cat === cat));
         };
-
         window.filterProducts = (v) => renderProducts(products.filter(p => p.name.toLowerCase().includes(v.toLowerCase())));
 
         // --- DETALHES DO PRODUTO (MODAL) ---
@@ -679,17 +674,36 @@
             currentProd = products.find(p => p.id === id);
             selections = { size: '', color: '' };
             
-            // Tratamento de imagens e vídeos
+            // Tratamento de imagens
             const imgs = currentProd.images?.length ? currentProd.images : [currentProd.img];
             document.getElementById('detailWrapper').innerHTML = imgs.map(url => {
                  if(url.includes('.mp4')) return `<div class="swiper-slide"><video src="${url}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:contain"></video></div>`;
                  return `<div class="swiper-slide"><img src="${url}"></div>`
             }).join('');
-            
             new Swiper('.detail-swiper', { pagination: { el: '.swiper-pagination' } });
             
             document.getElementById('mName').innerText = currentProd.name;
-            document.getElementById('mPrice').innerText = Number(currentProd.price).toLocaleString() + " MT";
+            
+            // Preço no Modal com Promoção
+            const promo = checkPromo(currentProd);
+            const pContainer = document.getElementById('mPriceContainer');
+            if(promo.active) {
+                pContainer.innerHTML = `
+                    <span style="text-decoration:line-through; color:#94a3b8; margin-right:10px;">${Number(promo.old).toLocaleString()} MT</span>
+                    <span style="color:var(--promo); font-size:1.8rem; font-weight:800;">${Number(promo.price).toLocaleString()} MT</span>
+                `;
+            } else {
+                pContainer.innerHTML = `<span style="color:var(--primary); font-size:1.8rem; font-weight:800;">${Number(currentProd.price).toLocaleString()} MT</span>`;
+            }
+
+            // Descrição (Detalhes)
+            const descBox = document.getElementById('mDescContainer');
+            if(currentProd.details && currentProd.details.trim() !== "") {
+                descBox.classList.remove('hidden');
+                descBox.innerText = currentProd.details;
+            } else {
+                descBox.classList.add('hidden');
+            }
             
             // Tamanhos
             const sizes = currentProd.sizes && currentProd.sizes.length > 0 ? currentProd.sizes : ['Único'];
@@ -699,7 +713,6 @@
             const colors = currentProd.colors && currentProd.colors.length > 0 ? currentProd.colors : ['Padrão'];
             document.getElementById('mColors').innerHTML = colors.map(c => `<div class="chip" onclick="sel('color', '${c}', this)">${c}</div>`).join('');
             
-            // Seleção automática se só houver uma opção
             if(sizes.length === 1) sel('size', sizes[0], document.querySelector('#mSizes .chip'));
             if(colors.length === 1) sel('color', colors[0], document.querySelector('#mColors .chip'));
 
@@ -714,9 +727,12 @@
         window.addToCart = () => {
             if(!selections.size || !selections.color) return showToast("Por favor, escolha a Cor e o Tamanho!");
             
-            // Adiciona ID único para o item do carrinho
+            const promo = checkPromo(currentProd);
+            const finalPrice = promo.active ? promo.price : currentProd.price;
+
             cart.push({ 
                 ...currentProd, 
+                price: finalPrice, // Salva o preço correto no carrinho
                 size: selections.size, 
                 color: selections.color, 
                 cid: Date.now() 
@@ -756,7 +772,6 @@
         window.checkout = async () => {
             const addr = document.getElementById('cAddr').value;
             const pay = document.getElementById('cPay').value;
-            
             if(!addr || !cart.length) return showToast("Preencha o endereço de entrega!");
             
             const u = auth.currentUser;
@@ -764,73 +779,42 @@
             const ud = snap.data();
             const total = cart.reduce((a, b) => a + Number(b.price), 0);
             
-            // Prepara itens simplificados para o banco de dados
             const orderItems = cart.map(c => ({
-                id: c.id,
-                name: c.name,
-                price: c.price,
-                size: c.size,
-                color: c.color,
-                img: c.img
+                id: c.id, name: c.name, price: c.price, size: c.size, color: c.color, img: c.img, commission: c.commission || 0
             }));
 
-            // Salva no Firestore
             await addDoc(collection(db, "orders"), { 
-                uid: u.uid, 
-                userName: ud.name, 
-                userPhone: ud.phone,
-                items: orderItems, 
-                address: addr,
-                payment: pay,
-                total: total, 
-                status: 'pending', 
-                date: Date.now() 
+                uid: u.uid, userName: ud.name, userPhone: ud.phone, items: orderItems, 
+                address: addr, payment: pay, total: total, status: 'pending', date: Date.now() 
             });
             
-            // Formata mensagem para WhatsApp com DETALHES
-            let itemsList = cart.map(c => `- ${c.name} (Tam: ${c.size} | Cor: ${c.color})`).join('%0A');
+            let itemsList = cart.map(c => `- ${c.name} (${c.size}/${c.color})`).join('%0A');
             let msg = `*NOVO PEDIDO (APP)*%0A%0A👤 *Cliente:* ${ud.name}%0A📱 *Tel:* ${ud.phone}%0A📍 *Endereço:* ${addr}%0A💳 *Pagamento:* ${pay}%0A%0A📦 *ITENS:*%0A${itemsList}%0A%0A💰 *TOTAL: ${total.toLocaleString()} MT*`;
             
-            if(waNumber) {
-                window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
-            } else {
-                showToast("Pedido enviado! Aguarde contacto.");
-            }
+            if(waNumber) window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
+            else showToast("Pedido enviado! Aguarde contacto.");
             
-            cart = []; 
-            document.getElementById('cartCount').innerText = 0; 
-            closeModal('cartModal');
+            cart = []; document.getElementById('cartCount').innerText = 0; closeModal('cartModal');
         };
 
         // --- NAVEGAÇÃO E UTILITÁRIOS ---
         window.switchView = (v, btn) => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            if(v === 'home') {
-                document.getElementById('homeView').classList.remove('hidden');
-                document.getElementById('profileView').classList.add('hidden');
-            } else {
-                document.getElementById('homeView').classList.add('hidden');
-                document.getElementById('profileView').classList.remove('hidden');
-            }
+            if(v === 'home') { document.getElementById('homeView').classList.remove('hidden'); document.getElementById('profileView').classList.add('hidden'); } 
+            else { document.getElementById('homeView').classList.add('hidden'); document.getElementById('profileView').classList.remove('hidden'); }
         };
         
         window.openWhatsapp = () => { waNumber ? window.open(`https://wa.me/${waNumber}`, '_blank') : showToast("WhatsApp indisponível") };
         window.downloadApp = () => { window.appDownloadLink && window.appDownloadLink.length > 5 ? window.open(window.appDownloadLink, '_blank') : showToast("Link indisponível."); };
         window.openSocial = () => { window.socialLink && window.socialLink.length > 5 ? window.open(window.socialLink, '_blank') : showToast("Instagram não configurado."); };
         window.openFacebook = () => { window.facebookLink && window.facebookLink.length > 5 ? window.open(window.facebookLink, '_blank') : showToast("Facebook não configurado."); };
-        
         window.closeModal = (id) => document.getElementById(id).classList.remove('open');
         window.openTextModal = (title, content) => { document.getElementById('infoTitle').innerText = title; document.getElementById('infoContent').innerText = content; document.getElementById('infoModal').classList.add('open'); };
         window.showToast = (msg) => { const t = document.getElementById('toast'); t.querySelector('span').innerText = msg; t.classList.add('visible'); setTimeout(() => t.classList.remove('visible'), 3000); };
         window.togglePassView = () => { const input = document.getElementById('regPass'); input.type = input.type === 'password' ? 'text' : 'password'; };
         window.resetPass = () => { 
-            if(auth.currentUser) {
-                sendPasswordResetEmail(auth, auth.currentUser.email)
-                .then(() => showToast("Verifique seu e-mail!"))
-                .catch(e => showToast("Erro ao enviar e-mail"));
-            }
+            if(auth.currentUser) sendPasswordResetEmail(auth, auth.currentUser.email).then(() => showToast("Verifique seu e-mail!")).catch(e => showToast("Erro ao enviar e-mail"));
         };
     </script>
 </body>
