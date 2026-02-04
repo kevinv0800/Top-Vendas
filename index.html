@@ -12,24 +12,17 @@
     <style>
         :root {
             /* --- NOVA PALETA DE CORES (Profissional: Midnight Blue & Sky) --- */
-            --bg-dark: #0f172a; /* Azul muito escuro, quase preto (Slate 900) */
-            
-            /* Gradiente profissional e sóbrio */
+            --bg-dark: #0f172a; 
             --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-            
-            --bg-card: rgba(30, 41, 59, 0.9); /* Slate 800 com transparência */
+            --bg-card: rgba(30, 41, 59, 0.9);
             --bg-card-blur: blur(12px);
-            
-            /* Azul Vibrante para Call to Action (Confiança) */
             --primary: #38bdf8; 
             --primary-glow: rgba(56, 189, 248, 0.3);
-            
-            --accent: #818cf8; /* Indigo suave */
-            
+            --accent: #818cf8; 
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.1);
-            --radius: 16px; /* Bordas um pouco mais quadradas para ar profissional */
+            --radius: 16px; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -94,7 +87,8 @@
             background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border); height: 70px;
         }
-        .logo-img { height: 45px; display: none; }
+        /* Importante: Logo display none por padrão até carregar */
+        .logo-img { height: 45px; display: none; object-fit: contain; }
         .logo-text { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; text-transform: uppercase; }
 
         /* --- SEARCH --- */
@@ -177,15 +171,15 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        /* Ícone Especial LOVE (Coração e Flor) */
+        /* Ícone Especial LOVE */
         .love-icon-box {
-            background: linear-gradient(135deg, #be185d, #ec4899); /* Pink/Rose */
+            background: linear-gradient(135deg, #be185d, #ec4899);
             border-color: #fbcfe8; 
-            width: auto; /* Adapta para dois ícones */
+            width: auto; 
             padding: 0 10px;
             border-radius: 20px;
             color: #fff;
-            gap: 5px; /* Espaço entre coração e flor */
+            gap: 5px; 
             animation: float 2.5s ease-in-out infinite alternate;
         }
         .love-icon-box i { color: #fff; font-size: 0.9rem; }
@@ -210,17 +204,14 @@
         .sheet { width: 100%; max-width: 500px; background: #0f172a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
         .modal.open .sheet { transform: translateY(0); }
         
-        /* ADAPTAÇÃO DA IMAGEM DE DETALHE */
         .detail-swiper { 
             width: 100%; 
-            aspect-ratio: 1/1; /* Garante que seja quadrado */
-            /* max-height: 400px; Remove limitação fixa para adaptar melhor */
+            aspect-ratio: 1/1; 
             border-radius: 16px; 
             margin-bottom: 20px; 
             border: 1px solid var(--border); 
             background: rgba(255,255,255,0.02); 
         }
-        /* Importante: Object-fit contain para ver o produto todo */
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; } 
         
         .chip { padding: 10px 18px; border: 1px solid #334155; border-radius: 10px; font-size: 0.9rem; margin-right: 8px; margin-bottom: 8px; display: inline-block; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
@@ -248,6 +239,7 @@
     <div id="loginView">
         <div style="text-align: center; margin-bottom: 30px;">
             <img id="loginLogoImg" class="dynamic-logo hidden">
+            
             <div id="loginLogoText" class="logo-text-anim hidden">TOP VENDAS</div>
             
             <h2 id="loginTitle" style="margin-top:20px; font-weight:800; color: #fff;">Bem-vindo</h2>
@@ -524,7 +516,7 @@
             }
         };
 
-        // --- DADOS DA LOJA ---
+        // --- DADOS DA LOJA & LOGO SYNC ---
         onSnapshot(doc(db, "settings", "store"), (snap) => {
             if(snap.exists()) {
                 const d = snap.data();
@@ -534,17 +526,27 @@
                 if(d.aboutText) window.storeAbout = d.aboutText;
                 if(d.deliveryText) window.storeDelivery = d.deliveryText;
                 
+                // --- AQUI ESTA A SINCRONIZAÇÃO DA LOGO ---
                 const logoImgs = [document.getElementById('headerLogo'), document.getElementById('loginLogoImg')];
                 const logoTxts = [document.getElementById('headerText'), document.getElementById('loginLogoText')];
                 
-                if(d.logo) {
-                    logoImgs.forEach(img => { img.src = d.logo; img.classList.remove('hidden'); });
+                if(d.logo && d.logo.length > 5) {
+                    // Se existe logo no painel, mostra a imagem e esconde o texto
+                    logoImgs.forEach(img => { 
+                        img.src = d.logo; 
+                        img.classList.remove('hidden'); 
+                        img.style.display = 'block'; 
+                    });
                     logoTxts.forEach(txt => txt.classList.add('hidden'));
-                    document.getElementById('headerLogo').style.display = 'block';
                 } else {
-                    logoImgs.forEach(img => img.classList.add('hidden'));
+                    // Se NÃO existe logo no painel, esconde imagem e mostra texto
+                    logoImgs.forEach(img => {
+                         img.classList.add('hidden'); 
+                         img.style.display = 'none';
+                    });
                     logoTxts.forEach(txt => txt.classList.remove('hidden'));
                 }
+                
                 if(d.social) { document.getElementById('socialBtn').classList.remove('hidden'); }
             }
         });
@@ -610,15 +612,11 @@
                 const nameLower = p.name.toLowerCase();
                 const catLower = p.cat ? p.cat.toLowerCase() : "";
                 
-                // LÓGICA DE ÍCONES FLUTUANTES ANIMADOS
                 let floatIconHtml = "";
                 let cardStyle = ""; 
 
-                // Lógica Especial LOVE (Coração e Flor)
                 if (nameLower.includes('love') || catLower.includes('love') || nameLower.includes('namorad')) {
-                    floatIconHtml = `<div class="float-icon-box love-icon-box">
-                        <i class="fa-solid fa-heart"></i> <i class="fa-solid fa-rose"></i>
-                    </div>`;
+                    floatIconHtml = `<div class="float-icon-box love-icon-box"><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-rose"></i></div>`;
                 } else if (nameLower.includes('celular') || nameLower.includes('iphone') || nameLower.includes('tec') || nameLower.includes('fone')) {
                     floatIconHtml = `<div class="float-icon-box" style="animation-delay: 0.5s"><i class="fa-solid fa-bolt"></i></div>`;
                 } else if (nameLower.includes('tenis') || nameLower.includes('sapato')) {
@@ -660,7 +658,6 @@
             
             document.getElementById('detailWrapper').innerHTML = imgs.map(url => {
                  if(url.includes('.mp4')) return `<div class="swiper-slide"><video src="${url}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:contain"></video></div>`;
-                 // Object-fit contain aqui também garantido pelo CSS global
                  return `<div class="swiper-slide"><img src="${url}"></div>`
             }).join('');
             
