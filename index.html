@@ -19,7 +19,7 @@
             --primary: #38bdf8; 
             --primary-glow: rgba(56, 189, 248, 0.3);
             --accent: #818cf8; 
-            --promo: #fbbf24; /* Cor para promoções (Dourado/Amarelo) */
+            --promo: #fbbf24; 
             --danger: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -111,7 +111,6 @@
         .search-wrapper:focus-within { border-color: var(--primary); }
         .search-input { width: 100%; background: transparent; border: none; padding: 14px 50px; color: #fff; outline: none; font-size: 0.95rem; }
         .search-icon { position: absolute; left: 20px; color: #94a3b8; font-size: 1rem; }
-        .search-filter-icon { position: absolute; right: 15px; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 10px; color: #ccc; cursor: pointer; }
 
         /* --- CATEGORIAS --- */
         .categories { display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
@@ -148,6 +147,38 @@
         }
         .img-container-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
         
+        /* --- ÍCONES ANIMADOS NOS PRODUTOS --- */
+        .prod-type-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 38px;
+            height: 38px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 15;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        
+        /* Animações Específicas Solicitadas */
+        .anim-beat { animation: beat 1.2s infinite ease-in-out; } /* Coração e Flor */
+        .anim-electric { animation: electricFlash 2s infinite; color: #fbbf24; } /* Raio */
+        .anim-float { animation: floatIcon 3s ease-in-out infinite; } /* Calção */
+        .anim-shake { animation: shake 2.5s infinite ease-in-out; } /* Calçados */
+
+        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes electricFlash { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); filter: brightness(1.5); } }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+
+
         .p-details { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .p-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 5px; color: #e2e8f0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .p-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
@@ -521,8 +552,8 @@
             const colors = type === 'confetti' ? ['#ef4444', '#3b82f6', '#22c55e', '#eab308'] :
                            type === 'gold' ? ['#fbbf24', '#f59e0b', '#fff'] : ['#fff'];
             
-            const shapes = type === 'snow' ? '50%' : '0%'; // Redondo para neve, quadrado para outros
-            const count = 30; // Quantidade de partículas
+            const shapes = type === 'snow' ? '50%' : '0%'; 
+            const count = 30;
 
             for(let i=0; i<count; i++) {
                 const el = document.createElement('div');
@@ -599,6 +630,37 @@
             return { active: false, price: p.price, old: null };
         };
 
+        // --- HELPER: ÍCONES ANIMADOS POR PRODUTO ---
+        const getProductIconObj = (name) => {
+            const n = name.toLowerCase();
+            
+            // 1. Love / Amor (Flor e Coração) - Bem Animado
+            if(n.includes('amor') || n.includes('love') || n.includes('namorada') || n.includes('coração') || n.includes('casal')) {
+                return { 
+                    icon: '<div style="position:relative; width:28px; height:28px;"><i class="fa-solid fa-heart" style="position:absolute; bottom:0; left:0; font-size:1.1rem; color:#f43f5e;"></i><i class="fa-solid fa-spa" style="position:absolute; top:-4px; right:-2px; font-size:0.8rem; color:#f9a8d4;"></i></div>', 
+                    anim: 'anim-beat' 
+                }; 
+            }
+            
+            // 2. Calções / Shorts - Ícone de camadas (simbolizando roupa dobrada/short)
+            if(n.includes('calção') || n.includes('short') || n.includes('bermuda')) {
+                return { icon: '<i class="fa-solid fa-layer-group"></i>', anim: 'anim-float' };
+            }
+                
+            // 3. Calçados (Sapato e Chinelos)
+            if(n.includes('tênis') || n.includes('sapato') || n.includes('calçado') || n.includes('chinelo') || n.includes('sandália')) {
+                return { icon: '<i class="fa-solid fa-shoe-prints"></i>', anim: 'anim-shake' };
+            }
+                
+            // 4. Produtos Eletrônicos (Raio)
+            if(n.includes('eletro') || n.includes('tv') || n.includes('som') || n.includes('celular') || n.includes('iphone') || n.includes('tech')) {
+                return { icon: '<i class="fa-solid fa-bolt"></i>', anim: 'anim-electric' };
+            }
+
+            // 5. Restante (Escolha - Sacola)
+            return { icon: '<i class="fa-solid fa-bag-shopping"></i>', anim: '' };
+        };
+
         // --- PRODUTOS ---
         const getCatIcon = (name) => {
             const n = name.toLowerCase();
@@ -629,6 +691,10 @@
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
                 const promo = checkPromo(p);
                 const animDelay = index * 0.05;
+                
+                // Determinar ícone animado do produto
+                const typeObj = getProductIconObj(p.name);
+                const typeIconHtml = `<div class="prod-type-badge ${typeObj.anim}">${typeObj.icon}</div>`;
 
                 // Badge de Promoção vs Novo
                 let badgeHtml = '';
@@ -650,7 +716,9 @@
 
                 return `<div class="card fade-in-up" onclick="openProduct('${p.id}')" style="animation-delay: ${animDelay}s;">
                     ${badgeHtml}
-                    <div class="img-container-card"><img src="${p.img}" loading="lazy"></div>
+                    <div class="img-container-card">
+                        <img src="${p.img}" loading="lazy">
+                        ${typeIconHtml} </div>
                     <div class="p-details">
                         <div class="p-title">${p.name}</div>
                         <div class="p-footer">
@@ -674,7 +742,6 @@
             currentProd = products.find(p => p.id === id);
             selections = { size: '', color: '' };
             
-            // Tratamento de imagens
             const imgs = currentProd.images?.length ? currentProd.images : [currentProd.img];
             document.getElementById('detailWrapper').innerHTML = imgs.map(url => {
                  if(url.includes('.mp4')) return `<div class="swiper-slide"><video src="${url}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:contain"></video></div>`;
@@ -684,7 +751,6 @@
             
             document.getElementById('mName').innerText = currentProd.name;
             
-            // Preço no Modal com Promoção
             const promo = checkPromo(currentProd);
             const pContainer = document.getElementById('mPriceContainer');
             if(promo.active) {
@@ -696,7 +762,6 @@
                 pContainer.innerHTML = `<span style="color:var(--primary); font-size:1.8rem; font-weight:800;">${Number(currentProd.price).toLocaleString()} MT</span>`;
             }
 
-            // Descrição (Detalhes)
             const descBox = document.getElementById('mDescContainer');
             if(currentProd.details && currentProd.details.trim() !== "") {
                 descBox.classList.remove('hidden');
@@ -705,11 +770,9 @@
                 descBox.classList.add('hidden');
             }
             
-            // Tamanhos
             const sizes = currentProd.sizes && currentProd.sizes.length > 0 ? currentProd.sizes : ['Único'];
             document.getElementById('mSizes').innerHTML = sizes.map(s => `<div class="chip" onclick="sel('size', '${s}', this)">${s}</div>`).join('');
             
-            // Cores
             const colors = currentProd.colors && currentProd.colors.length > 0 ? currentProd.colors : ['Padrão'];
             document.getElementById('mColors').innerHTML = colors.map(c => `<div class="chip" onclick="sel('color', '${c}', this)">${c}</div>`).join('');
             
@@ -732,7 +795,7 @@
 
             cart.push({ 
                 ...currentProd, 
-                price: finalPrice, // Salva o preço correto no carrinho
+                price: finalPrice, 
                 size: selections.size, 
                 color: selections.color, 
                 cid: Date.now() 
