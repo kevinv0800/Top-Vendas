@@ -167,11 +167,10 @@
             font-size: 1.1rem;
         }
         
-        /* Animações Específicas Solicitadas */
-        .anim-beat { animation: beat 1.2s infinite ease-in-out; } /* Coração e Flor */
-        .anim-electric { animation: electricFlash 2s infinite; color: #fbbf24; } /* Raio */
-        .anim-float { animation: floatIcon 3s ease-in-out infinite; } /* Calção */
-        .anim-shake { animation: shake 2.5s infinite ease-in-out; } /* Calçados */
+        .anim-beat { animation: beat 1.2s infinite ease-in-out; }
+        .anim-electric { animation: electricFlash 2s infinite; color: #fbbf24; }
+        .anim-float { animation: floatIcon 3s ease-in-out infinite; }
+        .anim-shake { animation: shake 2.5s infinite ease-in-out; }
 
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
         @keyframes electricFlash { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); filter: brightness(1.5); } }
@@ -197,10 +196,6 @@
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
         }
 
-        /* --- ANIMAÇÕES E ÍCONES FLUTUANTES --- */
-        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
         /* --- NAVEGAÇÃO --- */
         .bottom-nav { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
@@ -221,20 +216,55 @@
         .sheet { width: 100%; max-width: 500px; background: #0f172a; border-radius: 25px 25px 0 0; padding: 25px; transform: translateY(100%); transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); max-height: 90vh; overflow-y: auto; border-top: 1px solid var(--border); }
         .modal.open .sheet { transform: translateY(0); }
         
-        .detail-swiper { width: 100%; aspect-ratio: 1/1; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+        .detail-swiper { width: 100%; aspect-ratio: 1/1; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); position: relative; }
         .detail-swiper img { width: 100%; height: 100%; object-fit: contain; } 
         
+        .share-btn-float {
+            position: absolute; top: 15px; right: 15px; z-index: 20;
+            width: 40px; height: 40px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+        }
+
         .chip { padding: 10px 18px; border: 1px solid #334155; border-radius: 10px; font-size: 0.9rem; margin-right: 8px; margin-bottom: 8px; display: inline-block; cursor: pointer; transition: 0.2s; background: rgba(255,255,255,0.02); }
         .chip.selected { background: var(--primary); color: #0f172a; border-color: var(--primary); font-weight: 700; }
 
         .desc-box { margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; max-height: 150px; overflow-y: auto; white-space: pre-wrap; }
 
-        /* --- PERFIL --- */
+        /* --- PERFIL & SOCIAL (NOVO LAYOUT) --- */
         .profile-header { text-align: center; margin-bottom: 30px; }
         .p-avatar { width: 100px; height: 100px; border-radius: 50%; background: #1e293b; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 2px solid var(--primary); color: #fff; }
         .info-btn { background: rgba(255,255,255,0.03); width: 100%; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); cursor: pointer; color: #cbd5e1; transition: 0.2s; }
-        .social-box { background: linear-gradient(45deg, #833AB4, #C13584); margin-top: 15px; padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
-        .social-box.facebook { background: linear-gradient(45deg, #1877F2, #3b5998); }
+        
+        /* Redes Sociais Grid Compacto */
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .social-box { 
+            background: #1e293b; padding: 15px; border-radius: 16px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; border: 1px solid var(--border); text-align: center;
+        }
+        .social-box:active { transform: scale(0.96); }
+        .social-box.insta { background: linear-gradient(45deg, #405de6, #833ab4, #c13584); }
+        .social-box.face { background: linear-gradient(45deg, #1877f2, #3b5998); }
+        
+        /* Seletor de Quantidade */
+        .qty-selector {
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border-radius: 50px; padding: 5px;
+            width: fit-content; margin: 0 auto 20px; border: 1px solid var(--border);
+        }
+        .qty-btn {
+            width: 35px; height: 35px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.1); color: #fff; font-size: 1.2rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .qty-val { width: 40px; text-align: center; font-weight: 700; font-size: 1.1rem; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center; padding: 40px 20px; color: var(--text-muted);
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -331,19 +361,15 @@
                     </div>
                 </div>
 
-                <div id="socialBtn" class="social-box hidden" onclick="openSocial()">
-                    <i class="fa-brands fa-instagram" style="font-size: 2rem; color:#fff;"></i>
-                    <div style="color:#fff;">
-                        <div style="font-weight: bold; font-size:1.1rem;">Instagram</div>
-                        <div style="font-size: 0.85rem; opacity:0.9;">Siga nossas novidades</div>
+                <div class="social-grid">
+                    <div id="socialBtn" class="social-box insta hidden" onclick="openSocial()">
+                        <i class="fa-brands fa-instagram" style="font-size: 1.8rem; color:#fff; margin-bottom:5px;"></i>
+                        <div style="color:#fff; font-weight: 600; font-size:0.9rem;">Instagram</div>
                     </div>
-                </div>
 
-                <div id="facebookBtn" class="social-box facebook hidden" onclick="openFacebook()">
-                    <i class="fa-brands fa-facebook" style="font-size: 2rem; color:#fff;"></i>
-                    <div style="color:#fff;">
-                        <div style="font-weight: bold; font-size:1.1rem;">Facebook</div>
-                        <div style="font-size: 0.85rem; opacity:0.9;">Curta nossa página</div>
+                    <div id="facebookBtn" class="social-box face hidden" onclick="openFacebook()">
+                        <i class="fa-brands fa-facebook" style="font-size: 1.8rem; color:#fff; margin-bottom:5px;"></i>
+                        <div style="color:#fff; font-weight: 600; font-size:0.9rem;">Facebook</div>
                     </div>
                 </div>
 
@@ -365,7 +391,11 @@
                 <h2 id="mName" style="font-size: 1.2rem; max-width:85%;">Produto</h2>
                 <i class="fa fa-times" onclick="closeModal('prodModal')" style="font-size:1.5rem; padding:5px; cursor:pointer; color:#94a3b8;"></i>
             </div>
+            
             <div class="swiper detail-swiper">
+                <div class="share-btn-float" onclick="shareProduct()">
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
                 <div class="swiper-wrapper" id="detailWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
@@ -379,9 +409,18 @@
                 <div id="mSizes"></div>
             </div>
             
-            <div id="colorContainer" style="margin-bottom: 25px;">
+            <div id="colorContainer" style="margin-bottom: 15px;">
                 <p style="color:#64748b; font-size:0.8rem; margin-bottom:8px; font-weight:700; letter-spacing:1px;">COR / VARIAÇÃO</p>
                 <div id="mColors"></div>
+            </div>
+
+            <div style="text-align:center; margin-bottom:10px;">
+                <p style="color:#64748b; font-size:0.8rem; margin-bottom:8px; font-weight:700; letter-spacing:1px;">QUANTIDADE</p>
+                <div class="qty-selector">
+                    <button class="qty-btn" onclick="changeQty(-1)"><i class="fa fa-minus"></i></button>
+                    <div class="qty-val" id="mQty">1</div>
+                    <button class="qty-btn" onclick="changeQty(1)"><i class="fa fa-plus"></i></button>
+                </div>
             </div>
             
             <button class="action-btn" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
@@ -609,6 +648,10 @@
         // --- BANNERS ---
         onSnapshot(collection(db, "banners"), (snap) => {
             const wrapper = document.getElementById('bannerWrapper');
+            if(snap.empty) {
+                wrapper.innerHTML = `<div class="swiper-slide" style="display:flex;align-items:center;justify-content:center;background:#1e293b;color:#64748b;">Sem Banners</div>`;
+                return;
+            }
             wrapper.innerHTML = snap.docs.map(d => {
                 const b = d.data();
                 const isVideo = b.type === 'video' || (b.url && b.url.includes('.mp4'));
@@ -630,34 +673,23 @@
             return { active: false, price: p.price, old: null };
         };
 
+        // --- HELPER: VIBRATE ---
+        window.vibratePhone = () => {
+            if(navigator.vibrate) navigator.vibrate(50);
+        };
+
         // --- HELPER: ÍCONES ANIMADOS POR PRODUTO ---
         const getProductIconObj = (name) => {
             const n = name.toLowerCase();
-            
-            // 1. Love / Amor (Flor e Coração) - Bem Animado
             if(n.includes('amor') || n.includes('love') || n.includes('namorada') || n.includes('coração') || n.includes('casal')) {
                 return { 
                     icon: '<div style="position:relative; width:28px; height:28px;"><i class="fa-solid fa-heart" style="position:absolute; bottom:0; left:0; font-size:1.1rem; color:#f43f5e;"></i><i class="fa-solid fa-spa" style="position:absolute; top:-4px; right:-2px; font-size:0.8rem; color:#f9a8d4;"></i></div>', 
                     anim: 'anim-beat' 
                 }; 
             }
-            
-            // 2. Calções / Shorts - Ícone de camadas (simbolizando roupa dobrada/short)
-            if(n.includes('calção') || n.includes('short') || n.includes('bermuda')) {
-                return { icon: '<i class="fa-solid fa-layer-group"></i>', anim: 'anim-float' };
-            }
-                
-            // 3. Calçados (Sapato e Chinelos)
-            if(n.includes('tênis') || n.includes('sapato') || n.includes('calçado') || n.includes('chinelo') || n.includes('sandália')) {
-                return { icon: '<i class="fa-solid fa-shoe-prints"></i>', anim: 'anim-shake' };
-            }
-                
-            // 4. Produtos Eletrônicos (Raio)
-            if(n.includes('eletro') || n.includes('tv') || n.includes('som') || n.includes('celular') || n.includes('iphone') || n.includes('tech')) {
-                return { icon: '<i class="fa-solid fa-bolt"></i>', anim: 'anim-electric' };
-            }
-
-            // 5. Restante (Escolha - Sacola)
+            if(n.includes('calção') || n.includes('short') || n.includes('bermuda')) { return { icon: '<i class="fa-solid fa-layer-group"></i>', anim: 'anim-float' }; }
+            if(n.includes('tênis') || n.includes('sapato') || n.includes('calçado') || n.includes('chinelo') || n.includes('sandália')) { return { icon: '<i class="fa-solid fa-shoe-prints"></i>', anim: 'anim-shake' }; }
+            if(n.includes('eletro') || n.includes('tv') || n.includes('som') || n.includes('celular') || n.includes('iphone') || n.includes('tech')) { return { icon: '<i class="fa-solid fa-bolt"></i>', anim: 'anim-electric' }; }
             return { icon: '<i class="fa-solid fa-bag-shopping"></i>', anim: '' };
         };
 
@@ -686,30 +718,27 @@
         });
 
         window.renderProducts = (list) => {
+            const grid = document.getElementById('productGrid');
+            if(list.length === 0) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fa-solid fa-box-open"></i><p>Nenhum produto encontrado.</p></div>`;
+                return;
+            }
+
             const oneDay = 24 * 60 * 60 * 1000;
-            document.getElementById('productGrid').innerHTML = list.map((p, index) => {
+            grid.innerHTML = list.map((p, index) => {
                 const isNew = p.date ? (Date.now() - p.date < oneDay) : false;
                 const promo = checkPromo(p);
                 const animDelay = index * 0.05;
-                
-                // Determinar ícone animado do produto
                 const typeObj = getProductIconObj(p.name);
                 const typeIconHtml = `<div class="prod-type-badge ${typeObj.anim}">${typeObj.icon}</div>`;
 
-                // Badge de Promoção vs Novo
                 let badgeHtml = '';
                 if (promo.active) badgeHtml = '<div class="badge-promo">PROMO</div>';
                 else if (isNew) badgeHtml = '<div class="badge-new">NOVO</div>';
 
-                // Renderização do Preço
                 let priceHtml = '';
                 if(promo.active) {
-                    priceHtml = `
-                        <div class="price-box">
-                            <span class="p-old-price">${Number(promo.old).toLocaleString()} MT</span>
-                            <span class="p-promo-price">${Number(promo.price).toLocaleString()} MT</span>
-                        </div>
-                    `;
+                    priceHtml = `<div class="price-box"><span class="p-old-price">${Number(promo.old).toLocaleString()} MT</span><span class="p-promo-price">${Number(promo.price).toLocaleString()} MT</span></div>`;
                 } else {
                     priceHtml = `<div class="p-price">${Number(p.price).toLocaleString()} MT</div>`;
                 }
@@ -731,6 +760,7 @@
         };
 
         window.setCategory = (cat, el) => {
+            vibratePhone();
             document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             renderProducts(cat === 'todos' ? products : products.filter(p => p.cat === cat));
@@ -740,7 +770,7 @@
         // --- DETALHES DO PRODUTO (MODAL) ---
         window.openProduct = (id) => {
             currentProd = products.find(p => p.id === id);
-            selections = { size: '', color: '' };
+            selections = { size: '', color: '', qty: 1 }; // Reset qty
             
             const imgs = currentProd.images?.length ? currentProd.images : [currentProd.img];
             document.getElementById('detailWrapper').innerHTML = imgs.map(url => {
@@ -779,6 +809,7 @@
             if(sizes.length === 1) sel('size', sizes[0], document.querySelector('#mSizes .chip'));
             if(colors.length === 1) sel('color', colors[0], document.querySelector('#mColors .chip'));
 
+            document.getElementById('mQty').innerText = 1;
             document.getElementById('prodModal').classList.add('open');
         };
 
@@ -787,31 +818,62 @@
             el.classList.add('selected'); selections[type] = val;
         };
 
+        // --- LÓGICA DE QUANTIDADE ---
+        window.changeQty = (amount) => {
+            let q = selections.qty + amount;
+            if(q < 1) q = 1;
+            if(q > 20) q = 20; // Limite razoável
+            selections.qty = q;
+            document.getElementById('mQty').innerText = q;
+            vibratePhone();
+        };
+
+        // --- PARTILHAR PRODUTO ---
+        window.shareProduct = async () => {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: currentProd.name,
+                        text: `Olha este produto: ${currentProd.name}`,
+                        url: window.location.href // ou link específico se tiver
+                    });
+                } catch (err) { console.log('Erro partilha', err); }
+            } else {
+                showToast("Link copiado!");
+                // Fallback para clipboard se necessário
+            }
+        };
+
         window.addToCart = () => {
             if(!selections.size || !selections.color) return showToast("Por favor, escolha a Cor e o Tamanho!");
             
+            vibratePhone();
             const promo = checkPromo(currentProd);
             const finalPrice = promo.active ? promo.price : currentProd.price;
 
-            cart.push({ 
-                ...currentProd, 
-                price: finalPrice, 
-                size: selections.size, 
-                color: selections.color, 
-                cid: Date.now() 
-            });
+            // Adiciona a quantidade selecionada (loop para manter estrutura simples de remoção)
+            for(let i=0; i<selections.qty; i++) {
+                cart.push({ 
+                    ...currentProd, 
+                    price: finalPrice, 
+                    size: selections.size, 
+                    color: selections.color, 
+                    cid: Date.now() + Math.random() // Unique ID
+                });
+            }
             
             document.getElementById('cartCount').innerText = cart.length;
             closeModal('prodModal'); 
-            showToast("Adicionado ao carrinho!");
+            showToast(`${selections.qty} item(s) adicionado(s)!`);
         };
 
         // --- CARRINHO & CHECKOUT ---
         window.openCart = () => {
             const list = document.getElementById('cartList');
             if(cart.length === 0) {
-                list.innerHTML = `<div style="text-align:center; padding:30px; color:#666;"><i class="fa fa-basket-shopping" style="font-size:3rem; margin-bottom:10px;"></i><br>Seu carrinho está vazio</div>`;
+                list.innerHTML = `<div class="empty-state"><i class="fa fa-basket-shopping"></i><p>Seu carrinho está vazio</p></div>`;
             } else {
+                // Agrupar apenas visualmente se quiser, mas aqui mantemos lista simples
                 list.innerHTML = cart.map(i => `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid var(--border);">
                         <div style="display:flex; gap:10px; align-items:center;">
@@ -862,6 +924,7 @@
 
         // --- NAVEGAÇÃO E UTILITÁRIOS ---
         window.switchView = (v, btn) => {
+            vibratePhone();
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             if(v === 'home') { document.getElementById('homeView').classList.remove('hidden'); document.getElementById('profileView').classList.add('hidden'); } 
